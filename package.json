@@ -1,0 +1,132 @@
+{
+  "name": "genrate",
+  "version": "0.0.1",
+  "description": "scaffolding tool",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2046/genrate.git"
+  },
+  "author": "2046",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/2046/genrate/issues"
+  },
+  "homepage": "https://github.com/2046/genrate#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
+    "@tsconfig/node14": "^1.0.3",
+    "@types/jest": "^29.2.1",
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "commitizen": "^4.2.5",
+    "cz-customizable": "^7.0.0",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.1",
+    "jest": "^29.2.2",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "test": "npx jest",
+    "dev": "npx tsc -w",
+    "commit": "npx git-cz",
+    "prepare": "husky install"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "cz.config.js"
+    }
+  },
+  "lint-staged": {
+    "*.md": "prettier --write",
+    "*.yml": "prettier --write",
+    "*.json": "prettier --write",
+    "*.ts": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "printWidth": 140,
+    "singleQuote": true,
+    "trailingComma": "none"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "build",
+          "chore",
+          "ci",
+          "docs",
+          "feat",
+          "fix",
+          "perf",
+          "refactor",
+          "revert",
+          "style",
+          "test",
+          "wip"
+        ]
+      ]
+    }
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "./tsconfig.eslint.json"
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "prettier/prettier": "error",
+      "@typescript-eslint/no-floating-promises": [
+        "error",
+        {
+          "ignoreIIFE": true
+        }
+      ],
+      "@typescript-eslint/ban-ts-comment": "off"
+    },
+    "env": {
+      "node": true
+    }
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "collectCoverage": true,
+    "testMatch": [
+      "**/test/**/*.[jt]s?(x)",
+      "**/?(*.)+(spec|test).[jt]s?(x)"
+    ]
+  }
+}
