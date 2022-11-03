@@ -13,9 +13,11 @@ program
   .description(packageInfo.description)
   .version(packageInfo.version, '-v, --version', 'output the current version')
 
-commands.forEach((item) => program.command(item.command, item.description))
+commands.forEach((commandOption) => {
+  program.command(commandOption.command).description(commandOption.description).action(commandOption.action)
+})
 
-program.parse(process.argv)
+program.parse()
 
 function getPackageInfo() {
   return <{ version: string; description: string }>readJsonSync(resolve(process.cwd(), 'package.json'))
