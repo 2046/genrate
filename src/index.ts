@@ -1,7 +1,6 @@
-import { resolve } from 'path'
 import commands from './commands'
 import { program } from 'commander'
-import { readJsonSync } from 'fs-extra'
+import { getPackageInfo } from './utils'
 
 const packageInfo = getPackageInfo()
 
@@ -18,7 +17,3 @@ commands.forEach((commandOption) => {
 })
 
 program.parse()
-
-function getPackageInfo() {
-  return <{ version: string; description: string }>readJsonSync(resolve(process.cwd(), 'package.json'))
-}
