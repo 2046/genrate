@@ -1,7 +1,5 @@
-import { getNpmRegistry } from '../utils'
+import { npm } from '../utils'
 
-export default function (template: string) {
-  const npmRegistry = getNpmRegistry()
-
-  console.log(npmRegistry, template)
+export default async function (template: string) {
+  const fileUrl = await npm.getCompressedPackage(template, 'latest')
 }
