@@ -1,3 +1,3 @@
-export default function (template: string) {
+export default function remove(template: string) {
   // empty
 }
