@@ -3,9 +3,9 @@ import axios from 'axios'
 import rimraf from 'rimraf'
 import { promisify } from 'util'
 import decompress from 'decompress'
-import { lstatSync } from 'fs-extra'
 import { basename, join } from 'path'
 import { createWriteStream } from 'fs'
+import { lstatSync, ensureDir } from 'fs-extra'
 import { TMP_PATH, TEMPLATE_PATH } from './constants'
 
 export { npm, TMP_PATH, TEMPLATE_PATH }
@@ -24,11 +24,20 @@ export function download(url: string, dest: string) {
 }
 
 export async function unzip(filePath: string, dest: string, options: { override: boolean } = { override: false }) {
-  if (options.override && lstatSync(dest).isDirectory()) {
+  if (options.override && isDirectory(dest)) {
     await promisify(rimraf)(dest)
   }
 
+  await ensureDir(dest)
   await decompress(filePath, dest, { strip: 1 })
 
   return dest
+}
+
+function isDirectory(dest: string) {
+  try {
+    return lstatSync(dest).isDirectory()
+  } catch (error) {
+    return false
+  }
 }
