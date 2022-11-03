@@ -1,8 +1,9 @@
+import { join } from 'path'
+import { npm } from './utils'
 import commands from './commands'
 import { program } from 'commander'
-import { getPackageInfo } from './utils'
 
-const packageInfo = getPackageInfo()
+const packageInfo = npm.readPackageJson(join(process.cwd(), 'package.json'))
 
 program
   .name('gen')

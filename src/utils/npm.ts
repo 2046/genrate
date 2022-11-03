@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { exec } from './shell'
-import { basename, join } from 'path'
-import { createWriteStream } from 'fs'
-import { TMP_PATH } from './constants'
+import { readJsonSync } from 'fs-extra'
 
 export default {
   registry: (function () {
@@ -14,6 +12,14 @@ export default {
       throw new Error(stderr)
     }
   })(),
+  readPackageJson(filePath: string) {
+    return <
+      {
+        version: string
+        description: string
+      }
+    >readJsonSync(filePath)
+  },
   async getLatestVersion(packageName: string) {
     const { data } = await axios.get<{
       'dist-tags': { latest: string }
@@ -27,17 +33,5 @@ export default {
     }>(`${this.registry}${packageName}/${version}`)
 
     return data.dist.tarball
-  },
-  downloadCompressedPackage(url: string) {
-    return new Promise<string>((resolve, reject) => {
-      void axios.get<NodeJS.ReadableStream>(url, { responseType: 'stream' }).then((res) => {
-        const destPath = join(TMP_PATH, basename(url))
-
-        res.data
-          .pipe(createWriteStream(destPath))
-          .on('close', () => resolve(destPath))
-          .on('error', (error) => reject(error))
-      })
-    })
   }
 }
