@@ -34,7 +34,7 @@ export async function unzip(filePath: string, dest: string, options: { override:
   return dest
 }
 
-function isDirectory(dest: string) {
+export function isDirectory(dest: string) {
   try {
     return lstatSync(dest).isDirectory()
   } catch (error) {
