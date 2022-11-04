@@ -17,6 +17,10 @@ export default {
       {
         version: string
         description: string
+        genrate?: {
+          main: string
+          plugin?: string
+        }
       }
     >readJsonSync(filePath)
   },

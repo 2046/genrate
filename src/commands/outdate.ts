@@ -1,8 +1,7 @@
 import chalk from 'chalk'
 import { join } from 'path'
 import table from 'text-table'
-import { readdir } from 'fs-extra'
-import { npm, output, TEMPLATE_PATH } from '../utils'
+import { npm, output, readdir, compareVersion, TEMPLATE_PATH } from '../utils'
 
 export default async function outdate() {
   const templates = await readdir(TEMPLATE_PATH)
@@ -17,7 +16,7 @@ export default async function outdate() {
             npm
               .getLatestVersion(template)
               .then((latestVersion) => {
-                const isUpdate = currentVersion !== latestVersion
+                const isUpdate = compareVersion(currentVersion, latestVersion) === 1
 
                 resolve([
                   chalk.red(template),
