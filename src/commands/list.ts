@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { readdir } from 'fs-extra'
-import { npm, TEMPLATE_PATH } from '../utils'
+import { npm, output, TEMPLATE_PATH } from '../utils'
 
 export default async function list() {
   const templates = await readdir(TEMPLATE_PATH)
@@ -17,5 +17,5 @@ export default async function list() {
       ]
     : [TEMPLATE_PATH, '└── (empty)']
 
-  console.log(tree.join('\n'))
+  output(tree.join('\n'))
 }

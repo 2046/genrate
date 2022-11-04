@@ -41,3 +41,7 @@ export function isDirectory(dest: string) {
     return false
   }
 }
+
+export function output(message: string) {
+  console.log(message)
+}
