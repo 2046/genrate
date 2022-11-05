@@ -2,6 +2,15 @@ import axios from 'axios'
 import { exec } from './shell'
 import { readJsonSync } from 'fs-extra'
 
+interface PackageJson {
+  version: string
+  description: string
+  _template?: {
+    main: string
+    plugin?: string
+  }
+}
+
 export default {
   registry: (function () {
     const { code, stdout, stderr } = exec('npm config get registry')
@@ -13,16 +22,7 @@ export default {
     }
   })(),
   readPackageJson(filePath: string) {
-    return <
-      {
-        version: string
-        description: string
-        genrate?: {
-          main: string
-          plugin?: string
-        }
-      }
-    >readJsonSync(filePath)
+    return <PackageJson>readJsonSync(filePath)
   },
   async getLatestVersion(packageName: string) {
     const { data } = await axios.get<{
@@ -37,5 +37,10 @@ export default {
     }>(`${this.registry}${packageName}/${version}`)
 
     return data.dist.tarball
+  },
+  async checkPackageValid(packageName: string, version: string) {
+    const { data } = await axios.get<PackageJson>(`${this.registry}${packageName}/${version}`)
+
+    return !!data._template && !!data._template.main
   }
 }
