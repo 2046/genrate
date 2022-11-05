@@ -5,8 +5,8 @@ import rimraf from 'rimraf'
 import { promisify } from 'util'
 import decompress from 'decompress'
 import { createWriteStream } from 'fs'
-import { basename, join, resolve } from 'path'
 import { TMP_PATH, TEMPLATE_PATH } from './constants'
+import { basename, join, resolve, isAbsolute } from 'path'
 
 export { npm, TMP_PATH, TEMPLATE_PATH }
 
@@ -44,6 +44,10 @@ export function isDirectory(dest: string) {
 
 export function output(message: string) {
   console.log(message)
+}
+
+export function toAbsolutePath(path: string) {
+  return isAbsolute(path) ? path : resolve(join(process.cwd(), path))
 }
 
 export function compareVersion(targetVerison: string, currentVersion: string) {
