@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { join } from 'path'
 import { exec } from './shell'
 import { readJsonSync } from 'fs-extra'
 
@@ -22,7 +23,7 @@ export default {
     }
   })(),
   readPackageJson(filePath: string) {
-    return <PackageJson>readJsonSync(filePath)
+    return <PackageJson>readJsonSync(join(filePath, 'package.json'))
   },
   async getLatestVersion(packageName: string) {
     const { data } = await axios.get<{

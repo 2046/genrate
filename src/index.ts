@@ -3,7 +3,7 @@ import commands from './commands'
 import { program } from 'commander'
 import { join, resolve } from 'path'
 
-const packageInfo = npm.readPackageJson(resolve(join(__dirname, '..', 'package.json')))
+const packageInfo = npm.readPackageJson(resolve(join(__dirname, '..')))
 
 program
   .name('gen')

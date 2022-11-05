@@ -11,7 +11,7 @@ export default async function outdate() {
     ? await Promise.all(
         templates.map((template) => {
           return new Promise<Array<string>>((resolve) => {
-            const currentVersion = npm.readPackageJson(join(TEMPLATE_PATH, template, 'package.json')).version
+            const currentVersion = npm.readPackageJson(join(TEMPLATE_PATH, template)).version
 
             npm
               .getLatestVersion(template)
