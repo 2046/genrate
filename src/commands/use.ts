@@ -1,6 +1,6 @@
 import { join } from 'path'
 import npa from 'npm-package-arg'
-import { npm, download, unzip, isDirectory, TMP_PATH, TEMPLATE_PATH } from '../utils'
+import { npm, download, unzip, isDirectory, loadTemplateConfig, TMP_PATH, TEMPLATE_PATH } from '../utils'
 
 export default async function use(template: string) {
   const dest = process.argv[4] || process.cwd()
@@ -18,7 +18,8 @@ export default async function use(template: string) {
     }
   }
 
-  // load tempalte config
+  const templateConfig = await loadTemplateConfig(templatePath)
+
   // parse template config
   // genrate project structure
 }

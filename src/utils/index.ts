@@ -4,8 +4,8 @@ import fs from 'fs-extra'
 import rimraf from 'rimraf'
 import { promisify } from 'util'
 import decompress from 'decompress'
-import { basename, join } from 'path'
 import { createWriteStream } from 'fs'
+import { basename, join, resolve } from 'path'
 import { TMP_PATH, TEMPLATE_PATH } from './constants'
 
 export { npm, TMP_PATH, TEMPLATE_PATH }
@@ -74,4 +74,27 @@ export async function readdir(path: string) {
       return [...previousValue, currentValue]
     }
   }, [])
+}
+
+export async function dynamicImport<T>(path: string): Promise<T> {
+  return (await import(path).then((val) => <{ default: T }>val)).default
+}
+
+export async function loadTemplateConfig(path: string) {
+  const { main = '', plugin = '' } = npm.readPackageJson(join(path))._template || {}
+
+  if (main && plugin) {
+    return {
+      config: await dynamicImport<{ files: Array<string> }>(resolve(join(path, main))),
+      plugin: await dynamicImport<() => void>(resolve(join(path, plugin)))
+    }
+  }
+
+  if (main) {
+    return {
+      config: await dynamicImport<{ files: Array<string> }>(resolve(join(path, main)))
+    }
+  }
+
+  return null
 }
