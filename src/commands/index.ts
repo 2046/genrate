@@ -1,8 +1,8 @@
+import ls from './ls'
+import rm from './rm'
 import use from './use'
 import init from './init'
-import list from './list'
-import outdate from './outdate'
-import remove from './remove'
+import outdated from './outdated'
 
 export default [
   {
@@ -16,18 +16,18 @@ export default [
     action: init
   },
   {
-    command: 'list',
+    command: 'ls',
     description: 'list installed templates',
-    action: list
+    action: ls
   },
   {
-    command: 'outdate',
+    command: 'outdated',
     description: 'check for outdated templates',
-    action: outdate
+    action: outdated
   },
   {
-    command: 'remove [template]',
+    command: 'rm [template]',
     description: 'remove a template file',
-    action: remove
+    action: rm
   }
 ]
