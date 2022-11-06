@@ -1,6 +1,9 @@
 import { join } from 'path'
+import npm from '../utils/npm'
 import npa from 'npm-package-arg'
-import { npm, download, unzip, isDirectory, loadTemplateConfig, toAbsolutePath, TMP_PATH, TEMPLATE_PATH } from '../utils'
+import { isDirectory } from '../utils/fs'
+import { TMP_PATH, TEMPLATE_PATH } from '../utils/constants'
+import { download, unzip, loadTemplateConfig, toAbsolutePath } from '../utils'
 
 export default async function use(template: string) {
   const dest = toAbsolutePath(process.argv[4] || process.cwd())

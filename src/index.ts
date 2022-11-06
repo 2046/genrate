@@ -1,4 +1,4 @@
-import { npm } from './utils'
+import npm from './utils/npm'
 import commands from './commands'
 import { program } from 'commander'
 import { join, resolve } from 'path'

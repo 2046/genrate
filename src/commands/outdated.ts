@@ -1,7 +1,10 @@
 import chalk from 'chalk'
 import { join } from 'path'
+import npm from '../utils/npm'
 import table from 'text-table'
-import { npm, output, readdir, compareVersion, TEMPLATE_PATH } from '../utils'
+import { readdir } from '../utils/fs'
+import { output, compareVersion } from '../utils'
+import { TEMPLATE_PATH } from '../utils/constants'
 
 export default async function outdate() {
   const templates = await readdir(TEMPLATE_PATH)

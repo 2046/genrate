@@ -1,5 +1,8 @@
 import { join } from 'path'
-import { npm, output, readdir, TEMPLATE_PATH } from '../utils'
+import npm from '../utils/npm'
+import { output } from '../utils'
+import { readdir } from '../utils/fs'
+import { TEMPLATE_PATH } from '../utils/constants'
 
 export default async function list() {
   const templates = await readdir(TEMPLATE_PATH)

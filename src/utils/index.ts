@@ -1,14 +1,9 @@
 import npm from './npm'
 import axios from 'axios'
-import fs from 'fs-extra'
-import rimraf from 'rimraf'
-import { promisify } from 'util'
 import decompress from 'decompress'
 import { createWriteStream } from 'fs'
-import { TMP_PATH, TEMPLATE_PATH } from './constants'
 import { basename, join, resolve, isAbsolute } from 'path'
-
-export { npm, TMP_PATH, TEMPLATE_PATH }
+import { createDirSync, rmDirSync, isDirectory } from './fs'
 
 export function download(url: string, dest: string) {
   return new Promise<string>((resolve, reject) => {
@@ -25,21 +20,13 @@ export function download(url: string, dest: string) {
 
 export async function unzip(filePath: string, dest: string, options: { override: boolean } = { override: false }) {
   if (options.override && isDirectory(dest)) {
-    await rmdir(dest)
+    rmDirSync(dest)
   }
 
-  await fs.ensureDir(dest)
+  createDirSync(dest)
   await decompress(filePath, dest, { strip: 1 })
 
   return dest
-}
-
-export function isDirectory(dest: string) {
-  try {
-    return fs.lstatSync(dest).isDirectory()
-  } catch (error) {
-    return false
-  }
 }
 
 export function output(message: string) {
@@ -62,22 +49,6 @@ export function compareVersion(targetVerison: string, currentVersion: string) {
   }
 
   return 0
-}
-
-export async function rmdir(path: string) {
-  await promisify(rimraf)(path)
-}
-
-export async function readdir(path: string) {
-  const dirs = await fs.readdir(path)
-
-  return dirs.reduce((previousValue: Array<string>, currentValue: string) => {
-    if (currentValue.startsWith('@')) {
-      return [...previousValue, ...fs.readdirSync(join(path, currentValue)).map((value) => join(currentValue, value))]
-    } else {
-      return [...previousValue, currentValue]
-    }
-  }, [])
 }
 
 export async function dynamicImport<T>(path: string): Promise<T> {

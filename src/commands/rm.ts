@@ -1,10 +1,11 @@
 import { join } from 'path'
-import { rmdir, isDirectory, TEMPLATE_PATH } from '../utils'
+import { TEMPLATE_PATH } from '../utils/constants'
+import { rmDirSync, isDirectory } from '../utils/fs'
 
-export default async function remove(template: string) {
+export default function remove(template: string) {
   const path = join(TEMPLATE_PATH, template)
 
   if (isDirectory(path)) {
-    await rmdir(path)
+    rmDirSync(path)
   }
 }
