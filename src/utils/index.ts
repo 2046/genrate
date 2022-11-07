@@ -56,18 +56,18 @@ export async function dynamicImport<T>(path: string): Promise<T> {
 }
 
 export async function loadTemplateConfig(path: string) {
-  const { main = '', plugin = '' } = npm.readPackageJson(join(path))._template || {}
+  const { main = '', plugin = '' } = npm.readPackageJson(join(path)).template || {}
 
   if (main && plugin) {
     return {
-      config: await dynamicImport<{ files: Array<string> }>(resolve(join(path, main))),
+      config: await dynamicImport<{ files: Array<string>; ts?: boolean; dirs: Array<string> }>(resolve(join(path, main))),
       plugin: await dynamicImport<() => void>(resolve(join(path, plugin)))
     }
   }
 
   if (main) {
     return {
-      config: await dynamicImport<{ files: Array<string> }>(resolve(join(path, main)))
+      config: await dynamicImport<{ files: Array<string>; ts?: boolean; dirs: Array<string> }>(resolve(join(path, main)))
     }
   }
 

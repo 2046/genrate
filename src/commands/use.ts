@@ -1,6 +1,7 @@
 import { join } from 'path'
 import npm from '../utils/npm'
 import npa from 'npm-package-arg'
+import { parse } from '../configs'
 import { isDirectory } from '../utils/fs'
 import { TMP_PATH, TEMPLATE_PATH } from '../utils/constants'
 import { download, unzip, loadTemplateConfig, toAbsolutePath } from '../utils'
@@ -23,8 +24,9 @@ export default async function use(template: string) {
 
   const templateConfig = await loadTemplateConfig(templatePath)
 
-  // parse template config
-  // genrate project structure
+  if (templateConfig) {
+    parse(templateConfig.config)
+  }
 }
 
 function parsePackageName(packageName: string) {
