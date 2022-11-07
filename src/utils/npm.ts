@@ -6,7 +6,7 @@ import { readPackageJson } from './fs'
 interface PackageJson {
   version: string
   description: string
-  _template?: {
+  template?: {
     main: string
     plugin?: string
   }
@@ -42,6 +42,6 @@ export default {
   async checkPackageValid(packageName: string, version: string) {
     const { data } = await axios.get<PackageJson>(`${this.registry}${packageName}/${version}`)
 
-    return !!data._template && !!data._template.main
+    return !!data.template && !!data.template.main
   }
 }
