@@ -75,5 +75,5 @@ export async function loadTemplateConfig(path: string) {
 }
 
 export function stringify(value: unknown) {
-  return JSON.stringify(value)
+  return JSON.stringify(value, null, 2)
 }
