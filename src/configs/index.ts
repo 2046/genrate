@@ -1,4 +1,5 @@
 import tsConfig from './tsConfig'
+import pkgConfig from './pkgConfig'
 
 interface Config {
   ts?: boolean
@@ -7,7 +8,19 @@ interface Config {
 }
 
 export function parse(options: Config) {
+  let config: {
+    files: Array<Array<string>>
+    devDependencies: Record<string, string>
+  } = {
+    files: [],
+    devDependencies: {}
+  }
+
   if (options.ts) {
-    console.log(tsConfig())
+    config = tsConfig()
+  }
+
+  return {
+    files: [...config.files, ...pkgConfig(config).files]
   }
 }

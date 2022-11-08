@@ -73,3 +73,7 @@ export async function loadTemplateConfig(path: string) {
 
   return null
 }
+
+export function stringify(value: unknown) {
+  return JSON.stringify(value)
+}

@@ -34,3 +34,7 @@ export async function readdir(path: string) {
 export function readPackageJson<T>(path: string) {
   return fs.readJsonSync(path) as T
 }
+
+export function writeFileSync(path: string, data: string) {
+  fs.writeFileSync(path, data, { encoding: 'utf8' })
+}
