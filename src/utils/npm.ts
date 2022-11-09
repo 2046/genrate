@@ -40,8 +40,12 @@ export default {
     return data.dist.tarball
   },
   async checkPackageValid(packageName: string, version: string) {
-    const { data } = await axios.get<PackageJson>(`${this.registry}${packageName}/${version}`)
+    try {
+      const { data } = await axios.get<PackageJson>(`${this.registry}${packageName}/${version}`)
 
-    return !!data.template && !!data.template.main
+      return !!data.template && !!data.template.main
+    } catch (error) {
+      return false
+    }
   }
 }

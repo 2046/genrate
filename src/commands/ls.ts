@@ -4,7 +4,7 @@ import { output } from '../utils'
 import { readdir } from '../utils/fs'
 import { TEMPLATE_PATH } from '../utils/constants'
 
-export default async function list() {
+export default async function ls() {
   const templates = await readdir(TEMPLATE_PATH)
 
   const tree = templates.length

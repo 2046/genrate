@@ -6,28 +6,30 @@ import { readdir } from '../utils/fs'
 import { output, compareVersion } from '../utils'
 import { TEMPLATE_PATH } from '../utils/constants'
 
-export default async function outdate() {
+export default async function outdated() {
   const templates = await readdir(TEMPLATE_PATH)
   const THead = ['Template', 'Current', 'Latest'].map((s) => chalk.underline(s))
 
   const TBody = templates.length
     ? await Promise.all(
-        templates.map((template) => {
+        templates.map((template, index) => {
           return new Promise<Array<string>>((resolve) => {
             const currentVersion = npm.readPackageJson(join(TEMPLATE_PATH, template)).version
 
-            npm
-              .getLatestVersion(template)
-              .then((latestVersion) => {
-                const isUpdate = compareVersion(currentVersion, latestVersion) === 1
+            setTimeout(() => {
+              npm
+                .getLatestVersion(template)
+                .then((latestVersion) => {
+                  const isUpdate = compareVersion(currentVersion, latestVersion) === 1
 
-                resolve([
-                  chalk.red(template),
-                  chalk.magenta(currentVersion),
-                  isUpdate ? chalk.green(latestVersion) : chalk.magenta(latestVersion)
-                ])
-              })
-              .catch((err) => console.log(err))
+                  resolve([
+                    chalk.red(template),
+                    chalk.magenta(currentVersion),
+                    isUpdate ? chalk.green(latestVersion) : chalk.magenta(latestVersion)
+                  ])
+                })
+                .catch(() => resolve([chalk.red(template), chalk.magenta(currentVersion), '*']))
+            }, index * 400)
           })
         })
       )

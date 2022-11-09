@@ -12,6 +12,7 @@ program
   .addHelpCommand(false)
   .description(packageInfo.description)
   .version(packageInfo.version, '-v, --version', 'output the current version')
+  .addHelpText('after', `\nExamples:\n  gen use [template]\n`)
 
 commands.forEach((commandOption) => {
   program.command(commandOption.command).description(commandOption.description).action(commandOption.action)

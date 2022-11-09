@@ -4,9 +4,13 @@ import { parse } from '../configs'
 import { join, dirname } from 'path'
 import { TMP_PATH, TEMPLATE_PATH } from '../utils/constants'
 import { isDirectory, createDirSync, writeFileSync } from '../utils/fs'
-import { download, unzip, loadTemplateConfig, toAbsolutePath } from '../utils'
+import { download, unzip, loadTemplateConfig, toAbsolutePath, output } from '../utils'
 
-export default async function use(template: string) {
+export default async function use(template = '') {
+  if (!template) {
+    return output('Please enter [template] name')
+  }
+
   const dest = toAbsolutePath(process.argv[4] || process.cwd())
   const { name, version } = parsePackageName(template)
   const templatePath = join(TEMPLATE_PATH, name)
@@ -18,7 +22,7 @@ export default async function use(template: string) {
 
       await unzip(zipPath, templatePath, { override: true })
     } else {
-      return
+      return output(`The [${template}] not found or is illegal`)
     }
   }
 
@@ -26,6 +30,15 @@ export default async function use(template: string) {
 
   if (templateConfig) {
     createProject(parse(templateConfig.config).files, dest)
+
+    output(`Generated project in ${dest}
+
+Next steps:
+
+  npm install
+  npm run dev`)
+  } else {
+    output(`The [${template}] is illegal`)
   }
 }
 

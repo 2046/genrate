@@ -1,7 +1,7 @@
 {
   "name": "genrate",
   "version": "0.0.1",
-  "description": "scaffolding tool",
+  "description": "Create and build modern web applications with zero initial configuration",
   "engines": {
     "node": ">=14.0.0"
   },

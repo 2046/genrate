@@ -30,7 +30,7 @@ export async function unzip(filePath: string, dest: string, options: { override:
 }
 
 export function output(message: string) {
-  console.log(message)
+  console.log(`${message}\n`)
 }
 
 export function toAbsolutePath(path: string) {
