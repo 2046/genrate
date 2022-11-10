@@ -57,22 +57,25 @@ export async function dynamicImport<T>(path: string): Promise<T> {
 }
 
 export async function loadTemplateConfig(path: string): Promise<TemplateConfig | null> {
-  const { main = '', plugin = '' } = npm.readPackageJson(join(path)).template || {}
-
-  if (main && plugin) {
-    return {
-      config: await dynamicImport<TemplateConfigOptions>(resolve(join(path, main))),
-      plugin: await dynamicImport<TemplateConfigPlugin>(resolve(join(path, plugin)))
-    }
-  }
+  const { main = '', preprepare = '', postprepare = '' } = npm.readPackageJson(join(path)).template || {}
 
   if (main) {
-    return {
+    const templateConfig: TemplateConfig = {
       config: await dynamicImport<TemplateConfigOptions>(resolve(join(path, main)))
     }
-  }
 
-  return null
+    if (preprepare) {
+      templateConfig.preprepare = await dynamicImport<TemplateConfigPlugin>(resolve(join(path, preprepare)))
+    }
+
+    if (postprepare) {
+      templateConfig.postprepare = await dynamicImport<TemplateConfigPlugin>(resolve(join(path, postprepare)))
+    }
+
+    return templateConfig
+  } else {
+    return null
+  }
 }
 
 export function stringify(value: unknown) {

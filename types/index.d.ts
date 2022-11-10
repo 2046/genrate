@@ -1,8 +1,9 @@
-export type TemplateConfigPlugin = () => void
+export type TemplateConfigPlugin = (struct: ProjectStruct, config: TemplateConfigOptions, dest: string) => void
 
 export interface TemplateConfig {
   config: TemplateConfigOptions
-  plugin?: TemplateConfigPlugin
+  preprepare?: TemplateConfigPlugin
+  postprepare?: TemplateConfigPlugin
 }
 
 export interface TemplateConfigOptions {
@@ -23,7 +24,8 @@ export interface TemplateConfigPackageJson {
   description: string
   template?: {
     main: string
-    plugin?: string
+    preprepare?: string
+    postprepare?: string
   }
 }
 

@@ -2,15 +2,25 @@ import ts from './ts'
 import pkg from './pkg'
 import { ProjectStruct, TemplateConfig } from '../../types'
 
-export function parse(templateConfig: TemplateConfig) {
-  const { config, plugin } = templateConfig
-  let struct: ProjectStruct = defaultStruct()
+export function parse(templateConfig: TemplateConfig, dest: string) {
+  let struct: Required<ProjectStruct> = defaultStruct()
+  const { config, preprepare, postprepare } = templateConfig
+
+  if (preprepare) {
+    preprepare(struct, config, dest)
+  }
 
   if (config.ts) {
     struct = merge(struct, ts('node'))
   }
 
-  return merge(struct, pkg(struct))
+  struct = merge(struct, pkg(struct))
+
+  if (postprepare) {
+    postprepare(struct, config, dest)
+  }
+
+  return struct
 }
 
 function merge(object: ProjectStruct, source: ProjectStruct): Required<ProjectStruct> {
