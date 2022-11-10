@@ -1,6 +1,6 @@
 import { stringify } from '../utils'
 
-export default function (type: string) {
+export default function (type: 'node') {
   switch (type) {
     case 'node':
       return stringify({

@@ -2,6 +2,7 @@ import npm from '../utils/npm'
 import npa from 'npm-package-arg'
 import { parse } from '../configs'
 import { join, dirname } from 'path'
+import { ProjectStruct } from '../../types'
 import { TMP_PATH, TEMPLATE_PATH } from '../utils/constants'
 import { isDirectory, createDirSync, writeFileSync } from '../utils/fs'
 import { download, unzip, loadTemplateConfig, toAbsolutePath, output } from '../utils'
@@ -29,12 +30,12 @@ export default async function use(template = '') {
   const templateConfig = await loadTemplateConfig(templatePath)
 
   if (templateConfig) {
-    createProject(parse(templateConfig.config).files, dest)
+    createProject(parse(templateConfig), dest)
 
     output(`Generated project in ${dest}
 
 Next steps:
-
+  ${process.argv[4] ? '\n  cd ' + process.argv[4] : ''}
   npm install
   npm run dev`)
   } else {
@@ -48,12 +49,19 @@ function parsePackageName(packageName: string) {
   return rawSpec === '*' ? { name, version: 'latest' } : { name, version: rawSpec }
 }
 
-function createProject(files: Array<Array<string>>, dest: string) {
+function createProject(struct: Required<ProjectStruct>, dest: string) {
+  const { files, dirs } = struct
+
+  for (const dir of dirs) {
+    createDirSync(join(dest, dir))
+  }
+
   for (const [fileName, content] of files) {
     const filePath = join(dest, fileName)
+    const dirPath = dirname(filePath)
 
-    if (!isDirectory(dirname(filePath))) {
-      createDirSync(dirname(filePath))
+    if (!isDirectory(dirPath)) {
+      createDirSync(dirPath)
     }
 
     writeFileSync(filePath, content)

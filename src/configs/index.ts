@@ -1,26 +1,35 @@
-import tsConfig from './tsConfig'
-import pkgConfig from './pkgConfig'
+import ts from './ts'
+import pkg from './pkg'
+import { ProjectStruct, TemplateConfig } from '../../types'
 
-interface Config {
-  ts?: boolean
-  dirs?: Array<string>
-  files?: Array<string>
+export function parse(templateConfig: TemplateConfig) {
+  const { config, plugin } = templateConfig
+  let struct: ProjectStruct = defaultStruct()
+
+  if (config.ts) {
+    struct = merge(struct, ts('node'))
+  }
+
+  return merge(struct, pkg(struct))
 }
 
-export function parse(options: Config) {
-  let config: {
-    files: Array<Array<string>>
-    devDependencies: Record<string, string>
-  } = {
-    files: [],
-    devDependencies: {}
-  }
-
-  if (options.ts) {
-    config = tsConfig()
-  }
+function merge(object: ProjectStruct, source: ProjectStruct): Required<ProjectStruct> {
+  const objectClone = Object.assign({}, defaultStruct(), object)
+  const sourceClone = Object.assign({}, defaultStruct(), source)
 
   return {
-    files: [...config.files, ...pkgConfig(config).files]
+    dirs: [...objectClone.dirs, ...sourceClone.dirs],
+    files: [...objectClone.files, ...sourceClone.files],
+    dependencies: Object.assign({}, objectClone.dependencies, sourceClone.dependencies),
+    devDependencies: Object.assign({}, objectClone.devDependencies, sourceClone.devDependencies)
+  }
+}
+
+function defaultStruct(): Required<ProjectStruct> {
+  return {
+    dirs: [],
+    files: [],
+    dependencies: {},
+    devDependencies: {}
   }
 }
