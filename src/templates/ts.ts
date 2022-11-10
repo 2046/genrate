@@ -4,12 +4,19 @@ export default function (type: 'node') {
   switch (type) {
     case 'node':
       return stringify({
-        extends: '@tsconfig/node14/tsconfig.json',
         compilerOptions: {
-          rootDir: 'src',
-          outDir: 'dist'
+          strict: true,
+          sourceMap: true,
+          outDir: './dist',
+          target: 'es2020',
+          module: 'commonjs',
+          declaration: true,
+          skipLibCheck: true,
+          declarationDir: '.',
+          esModuleInterop: true,
+          forceConsistentCasingInFileNames: true
         },
-        include: ['src/**/*.ts']
+        include: ['./src/**/*.ts']
       })
     default:
       return ''
