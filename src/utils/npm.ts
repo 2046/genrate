@@ -2,15 +2,7 @@ import axios from 'axios'
 import { join } from 'path'
 import { exec } from './shell'
 import { readPackageJson } from './fs'
-
-interface PackageJson {
-  version: string
-  description: string
-  template?: {
-    main: string
-    plugin?: string
-  }
-}
+import { TemplateConfigPackageJson } from '../../types'
 
 export default {
   registry: (function () {
@@ -23,7 +15,7 @@ export default {
     }
   })(),
   readPackageJson(filePath: string) {
-    return readPackageJson<PackageJson>(join(filePath, 'package.json'))
+    return readPackageJson<TemplateConfigPackageJson>(join(filePath, 'package.json'))
   },
   async getLatestVersion(packageName: string) {
     const { data } = await axios.get<{
@@ -41,7 +33,7 @@ export default {
   },
   async checkPackageValid(packageName: string, version: string) {
     try {
-      const { data } = await axios.get<PackageJson>(`${this.registry}${packageName}/${version}`)
+      const { data } = await axios.get<TemplateConfigPackageJson>(`${this.registry}${packageName}/${version}`)
 
       return !!data.template && !!data.template.main
     } catch (error) {

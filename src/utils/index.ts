@@ -4,6 +4,7 @@ import decompress from 'decompress'
 import { createWriteStream } from 'fs'
 import { basename, join, resolve, isAbsolute } from 'path'
 import { createDirSync, rmDirSync, isDirectory } from './fs'
+import { TemplateConfig, TemplateConfigOptions, TemplateConfigPlugin } from '../../types'
 
 export function download(url: string, dest: string) {
   return new Promise<string>((resolve, reject) => {
@@ -55,19 +56,19 @@ export async function dynamicImport<T>(path: string): Promise<T> {
   return (await import(path).then((val) => <{ default: T }>val)).default
 }
 
-export async function loadTemplateConfig(path: string) {
+export async function loadTemplateConfig(path: string): Promise<TemplateConfig | null> {
   const { main = '', plugin = '' } = npm.readPackageJson(join(path)).template || {}
 
   if (main && plugin) {
     return {
-      config: await dynamicImport<{ files: Array<string>; ts?: boolean; dirs: Array<string> }>(resolve(join(path, main))),
-      plugin: await dynamicImport<() => void>(resolve(join(path, plugin)))
+      config: await dynamicImport<TemplateConfigOptions>(resolve(join(path, main))),
+      plugin: await dynamicImport<TemplateConfigPlugin>(resolve(join(path, plugin)))
     }
   }
 
   if (main) {
     return {
-      config: await dynamicImport<{ files: Array<string>; ts?: boolean; dirs: Array<string> }>(resolve(join(path, main)))
+      config: await dynamicImport<TemplateConfigOptions>(resolve(join(path, main)))
     }
   }
 
