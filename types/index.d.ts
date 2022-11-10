@@ -26,3 +26,10 @@ export interface TemplateConfigPackageJson {
     plugin?: string
   }
 }
+
+export interface ProjectStruct {
+  dirs?: Array<string>
+  files: Array<Array<string>>
+  dependencies?: Record<string, string>
+  devDependencies?: Record<string, string>
+}
