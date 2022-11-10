@@ -1,9 +1,11 @@
+import type prompts from 'prompts'
+
 export type TemplateConfigPlugin = (struct: ProjectStruct, config: TemplateConfigOptions, dest: string) => void
 
 export interface TemplateConfig {
-  config: TemplateConfigOptions
   preprepare?: TemplateConfigPlugin
   postprepare?: TemplateConfigPlugin
+  config: TemplateConfigOptions | ((prompts: prompts) => Promise<TemplateConfigOptions>)
 }
 
 export interface TemplateConfigOptions {

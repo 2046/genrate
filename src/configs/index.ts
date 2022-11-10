@@ -1,10 +1,16 @@
 import ts from './ts'
 import pkg from './pkg'
+import prompts from 'prompts'
 import { ProjectStruct, TemplateConfig } from '../../types'
 
-export function parse(templateConfig: TemplateConfig, dest: string) {
+export async function parse(templateConfig: TemplateConfig, dest: string) {
+  let { config } = templateConfig
+  const { preprepare, postprepare } = templateConfig
   let struct: Required<ProjectStruct> = defaultStruct()
-  const { config, preprepare, postprepare } = templateConfig
+
+  if (typeof config == 'function') {
+    config = await config(prompts)
+  }
 
   if (preprepare) {
     preprepare(struct, config, dest)

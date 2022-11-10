@@ -30,7 +30,7 @@ export default async function use(template = '') {
   const templateConfig = await loadTemplateConfig(templatePath)
 
   if (templateConfig) {
-    createProject(parse(templateConfig, dest), dest)
+    createProject(await parse(templateConfig, dest), dest)
 
     output(`Generated project in ${dest}
 
