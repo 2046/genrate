@@ -11,7 +11,7 @@ export interface TemplateConfig {
 export interface TemplateConfigOptions {
   ts?: boolean
   dirs?: Array<string>
-  files?: Array<string>
+  files?: Array<Array<string>>
   framework?: 'web' | 'vue' | 'react' | 'electron'
   lint?: Array<'stylelint' | 'eslint' | 'commitlint'>
   bundler?: 'rollup' | 'webpack' | 'vite'
