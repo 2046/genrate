@@ -1,6 +1,7 @@
 import ts from './ts'
 import pkg from './pkg'
 import prompts from 'prompts'
+import bundler from './bundler'
 import { ProjectStruct, TemplateConfig } from '../../types'
 
 export async function parse(templateConfig: TemplateConfig, dest: string) {
@@ -18,6 +19,10 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
 
   if (config.ts) {
     struct = merge(struct, ts('node'))
+  }
+
+  if (config.bundler) {
+    struct = merge(struct, bundler(config.bundler))
   }
 
   struct = merge(struct, pkg(struct))

@@ -6,17 +6,22 @@ export default function (type: 'node') {
       return stringify({
         compilerOptions: {
           strict: true,
-          sourceMap: true,
-          outDir: './dist',
-          target: 'es2020',
-          module: 'commonjs',
-          declaration: true,
+          outDir: 'dist',
+          rootDir: 'src',
+          target: 'ES2020',
+          lib: ['ES2020'],
+          module: 'CommonJS',
           skipLibCheck: true,
-          declarationDir: '.',
+          removeComments: true,
           esModuleInterop: true,
+          moduleResolution: 'node',
+          resolveJsonModule: true,
+          // declaration: true,
+          // sourceMap: true,
+          // declarationDir: 'types',
           forceConsistentCasingInFileNames: true
         },
-        include: ['./src/**/*.ts']
+        include: ['src/**/*.ts']
       })
     default:
       return ''
