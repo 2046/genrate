@@ -21,6 +21,14 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
     struct = merge(struct, ts('node'))
   }
 
+  if (config.dirs) {
+    struct = merge(struct, { dirs: config.dirs, files: [] })
+  }
+
+  if (config.files) {
+    struct = merge(struct, { files: config.files })
+  }
+
   if (config.bundler) {
     struct = merge(struct, bundler(config.bundler))
   }
