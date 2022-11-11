@@ -18,7 +18,6 @@ export interface TemplateConfigOptions {
   vscode?: Array<string>
   test?: boolean
   e2e?: boolean
-  ignore?: boolean
 }
 
 export interface TemplateConfigPackageJson {
