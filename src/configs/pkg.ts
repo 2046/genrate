@@ -1,7 +1,7 @@
 import { stringify } from '../utils'
 import { ProjectStruct, TemplateConfigOptions } from '../../types'
 
-export default function (config: TemplateConfigOptions, struct: ProjectStruct) {
+export default function (name: string, config: TemplateConfigOptions, struct: ProjectStruct) {
   const scripts: Record<string, string> = {}
 
   if (config.bundler && config.bundler === 'rollup') {
@@ -13,7 +13,7 @@ export default function (config: TemplateConfigOptions, struct: ProjectStruct) {
       [
         'package.json',
         stringify({
-          name: '',
+          name,
           version: '1.0.0',
           description: '',
           scripts,

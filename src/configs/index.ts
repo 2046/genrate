@@ -2,6 +2,7 @@ import ts from './ts'
 import pkg from './pkg'
 import prompts from 'prompts'
 import bundler from './bundler'
+import { basename } from 'path'
 import { ProjectStruct, TemplateConfig } from '../../types'
 
 export async function parse(templateConfig: TemplateConfig, dest: string) {
@@ -33,7 +34,7 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
     struct = merge(struct, bundler(config.bundler))
   }
 
-  struct = merge(struct, pkg(config, struct))
+  struct = merge(struct, pkg(basename(dest), config, struct))
 
   if (postprepare) {
     postprepare(struct, config, dest)
