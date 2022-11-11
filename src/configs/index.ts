@@ -25,7 +25,7 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
     struct = merge(struct, bundler(config.bundler))
   }
 
-  struct = merge(struct, pkg(struct))
+  struct = merge(struct, pkg(config, struct))
 
   if (postprepare) {
     postprepare(struct, config, dest)

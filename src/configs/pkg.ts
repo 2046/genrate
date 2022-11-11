@@ -1,7 +1,13 @@
 import { stringify } from '../utils'
-import { ProjectStruct } from '../../types'
+import { ProjectStruct, TemplateConfigOptions } from '../../types'
 
-export default function (struct: ProjectStruct) {
+export default function (config: TemplateConfigOptions, struct: ProjectStruct) {
+  const scripts: Record<string, string> = {}
+
+  if (config.bundler && config.bundler === 'rollup') {
+    scripts.build = 'npx rollup -c ./rollup.config.js'
+  }
+
   return {
     files: [
       [
@@ -10,7 +16,7 @@ export default function (struct: ProjectStruct) {
           name: '',
           version: '1.0.0',
           description: '',
-          scripts: {},
+          scripts,
           dependencies: struct.dependencies,
           devDependencies: struct.devDependencies
         })
