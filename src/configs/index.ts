@@ -19,7 +19,7 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
   }
 
   if (config.ts) {
-    struct = merge(struct, ts('node'))
+    struct = merge(struct, ts(config))
   }
 
   if (config.dirs) {

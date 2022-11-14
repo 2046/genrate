@@ -1,6 +1,7 @@
 import type prompts from 'prompts'
 
 export type TemplateConfigPlugin = (struct: ProjectStruct, config: TemplateConfigOptions, dest: string) => void
+export type TS_TEMPLATE_TYPE = 'web' | 'webpack' | 'nodepack'
 
 export interface TemplateConfig {
   preprepare?: TemplateConfigPlugin
@@ -10,6 +11,7 @@ export interface TemplateConfig {
 
 export interface TemplateConfigOptions {
   ts?: boolean
+  lib?: boolean
   dirs?: Array<string>
   files?: Array<Array<string>>
   framework?: 'web' | 'vue' | 'react' | 'electron'
@@ -36,3 +38,11 @@ export interface ProjectStruct {
   dependencies?: Record<string, string>
   devDependencies?: Record<string, string>
 }
+
+export type RequiredByKeys<T, K extends keyof T = keyof T> = {
+  [Key in Exclude<keyof T, K>]?: T[Key]
+} & {
+  [Key in K]-?: T[Key]
+} extends infer R
+  ? { [Key in keyof R]: R[Key] }
+  : never
