@@ -2,6 +2,7 @@ import tpl from '../templates'
 import { ProjectStruct, TemplateConfigOptions } from '../../types'
 
 export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
+  const devDependencies = { typescript: '4.8.4' }
   const { ts = false, lib = false, framework = '' } = templateConfig
 
   if (!ts) {
@@ -12,10 +13,8 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
     switch (framework) {
       case 'web':
         return {
-          files: [['tsconfig.json', tpl.ts('webpack')]],
-          devDependencies: {
-            typescript: '4.8.4'
-          }
+          devDependencies,
+          files: [['tsconfig.json', tpl.ts('webpack')]]
         }
     }
   }
@@ -24,27 +23,21 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
     switch (framework) {
       case 'web':
         return {
-          files: [['tsconfig.json', tpl.ts('web')]],
-          devDependencies: {
-            typescript: '4.8.4'
-          }
+          devDependencies,
+          files: [['tsconfig.json', tpl.ts('web')]]
         }
     }
   }
 
   if (lib) {
     return {
-      files: [['tsconfig.json', tpl.ts('nodepack')]],
-      devDependencies: {
-        typescript: '4.8.4'
-      }
+      devDependencies,
+      files: [['tsconfig.json', tpl.ts('nodepack')]]
     }
   }
 
   return {
-    files: [['tsconfig.json', tpl.ts()]],
-    devDependencies: {
-      typescript: '4.8.4'
-    }
+    devDependencies,
+    files: [['tsconfig.json', tpl.ts()]]
   }
 }
