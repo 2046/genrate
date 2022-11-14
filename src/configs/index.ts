@@ -3,7 +3,8 @@ import pkg from './pkg'
 import prompts from 'prompts'
 import bundler from './bundler'
 import { basename } from 'path'
-import { ProjectStruct, TemplateConfig } from '../../types'
+import { cloneDeep } from 'lodash'
+import { ProjectStruct, TemplateConfig, TemplateConfigOptions } from '../../types'
 
 export async function parse(templateConfig: TemplateConfig, dest: string) {
   let { config } = templateConfig
@@ -15,9 +16,25 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
   }
 
   if (preprepare) {
-    preprepare(struct, config, dest)
+    struct = {
+      ...struct,
+      ...(await preprepare(cloneDeep(struct), cloneDeep(config), dest))
+    }
   }
 
+  struct = parseConfig(struct, config, dest)
+
+  if (postprepare) {
+    struct = {
+      ...struct,
+      ...(await postprepare(cloneDeep(struct), cloneDeep(config), dest))
+    }
+  }
+
+  return struct
+}
+
+function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOptions, dest: string) {
   if (config.ts) {
     struct = merge(struct, ts(config))
   }
@@ -34,13 +51,7 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
     struct = merge(struct, bundler(config.bundler))
   }
 
-  struct = merge(struct, pkg(basename(dest), config, struct))
-
-  if (postprepare) {
-    postprepare(struct, config, dest)
-  }
-
-  return struct
+  return merge(struct, pkg(basename(dest), config, struct))
 }
 
 function merge(object: ProjectStruct, source: ProjectStruct): Required<ProjectStruct> {

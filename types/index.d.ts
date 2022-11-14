@@ -1,6 +1,6 @@
 import type prompts from 'prompts'
 
-export type TemplateConfigPlugin = (struct: ProjectStruct, config: TemplateConfigOptions, dest: string) => void
+export type TemplateConfigPlugin = (struct: ProjectStruct, config: TemplateConfigOptions, dest: string) => Promise<ProjectStruct | void>
 export type TS_TEMPLATE_TYPE = 'web' | 'webpack' | 'nodepack'
 
 export interface TemplateConfig {
