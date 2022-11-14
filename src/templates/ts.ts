@@ -1,4 +1,3 @@
-import { stringify } from '../utils'
 import { RequiredByKeys, TS_TEMPLATE_TYPE } from '../../types'
 import { TSConfigJSON } from 'types-tsconfig'
 
@@ -32,5 +31,5 @@ export default function (type?: TS_TEMPLATE_TYPE) {
     config.compilerOptions.lib = ['ESNext', 'DOM']
   }
 
-  return stringify(config)
+  return config
 }

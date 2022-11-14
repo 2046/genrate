@@ -1,4 +1,5 @@
 import tpl from '../templates'
+import { stringify } from '../utils'
 import { ProjectStruct, TemplateConfigOptions } from '../../types'
 
 export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
@@ -12,20 +13,20 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   if (lib && framework) {
     switch (framework) {
       case 'web':
-        return { devDependencies, files: [['tsconfig.json', tpl.ts('webpack')]] }
+        return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts('webpack'))]] }
     }
   }
 
   if (framework) {
     switch (framework) {
       case 'web':
-        return { devDependencies, files: [['tsconfig.json', tpl.ts('web')]] }
+        return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts('web'))]] }
     }
   }
 
   if (lib) {
-    return { devDependencies, files: [['tsconfig.json', tpl.ts('nodepack')]] }
+    return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts('nodepack'))]] }
   }
 
-  return { devDependencies, files: [['tsconfig.json', tpl.ts()]] }
+  return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts())]] }
 }
