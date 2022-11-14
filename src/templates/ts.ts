@@ -20,11 +20,13 @@ export default function (type?: TS_TEMPLATE_TYPE) {
 
   if (type === 'webpack') {
     config.compilerOptions.declaration = true
+    config.compilerOptions.declarationDir = 'types'
     config.compilerOptions.lib = ['ESNext', 'DOM']
   }
 
   if (type === 'nodepack') {
     config.compilerOptions.declaration = true
+    config.compilerOptions.declarationDir = 'types'
   }
 
   if (type === 'web') {
