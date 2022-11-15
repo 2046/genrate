@@ -21,11 +21,6 @@ module.exports = defineConfig({
     resolve(),
     commonjs(),
     typescript({
-      tsconfigOverride: {
-        compilerOptions: {
-          module: 'ESNext'
-        }
-      },
       useTsconfigDeclarationDir: true
     })
   ]
