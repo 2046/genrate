@@ -1,9 +1,4 @@
-import { TemplateConfigOptions } from '../../types'
-
-export default function (templateConfig: TemplateConfigOptions) {
-  switch (templateConfig.bundler) {
-    case 'rollup':
-      return `const { defineConfig } = require('rollup')
+const tsTemplate = `const { defineConfig } = require('rollup')
 const json = require('@rollup/plugin-json')
 const clean = require('rollup-plugin-delete')
 const babel = require('@rollup/plugin-babel')
@@ -38,7 +33,34 @@ module.exports = defineConfig({
     })
   ]
 })`
-    default:
-      return ''
-  }
-}
+
+const jsTemplate = `const { defineConfig } = require('rollup')
+const json = require('@rollup/plugin-json')
+const clean = require('rollup-plugin-delete')
+const babel = require('@rollup/plugin-babel')
+const externals = require('rollup-plugin-node-externals')
+const commonjs = require('@rollup/plugin-commonjs')
+const { DEFAULT_EXTENSIONS } = require('@babel/core')
+const resolve = require('@rollup/plugin-node-resolve')
+
+module.exports = defineConfig({
+  input: 'src/index.js',
+  output: {
+    format: 'cjs',
+    sourcemap: true,
+    file: './dist/index.js'
+  },
+  plugins: [
+    clean({ targets: ['dist/*'] }),
+    externals({ deps: true }),
+    resolve(),
+    commonjs(),
+    json(),
+    babel({
+      babelHelpers: 'runtime',
+      exclude: '**/node_modules/**'
+    })
+  ]
+})`
+
+export default { jsTemplate, tsTemplate }
