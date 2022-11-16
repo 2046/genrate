@@ -1,11 +1,13 @@
 import { join } from 'path'
 import npm from '../utils/npm'
 import { output } from '../utils'
-import { readdir } from '../utils/fs'
+import { isDirectory, readdir } from '../utils/fs'
 import { TEMPLATE_PATH } from '../utils/constants'
 
 export default async function ls() {
-  const templates = await readdir(TEMPLATE_PATH)
+  let templates = await readdir(TEMPLATE_PATH)
+
+  templates = templates.filter((item) => isDirectory(join(TEMPLATE_PATH, item)))
 
   const tree = templates.length
     ? [
