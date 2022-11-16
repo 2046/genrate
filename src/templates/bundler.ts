@@ -1,7 +1,7 @@
 import { TemplateConfigOptions } from '../../types'
 
-export default function (type: TemplateConfigOptions['bundler']) {
-  switch (type) {
+export default function (templateConfig: TemplateConfigOptions) {
+  switch (templateConfig.bundler) {
     case 'rollup':
       return `const { defineConfig } = require('rollup')
 const json = require('@rollup/plugin-json')

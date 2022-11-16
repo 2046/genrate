@@ -48,7 +48,7 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
   }
 
   if (config.bundler) {
-    struct = merge(struct, bundler(config.bundler))
+    struct = merge(struct, bundler(config))
   }
 
   return merge(struct, pkg(basename(dest), config, struct))
