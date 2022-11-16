@@ -40,7 +40,6 @@ const clean = require('rollup-plugin-delete')
 const babel = require('@rollup/plugin-babel')
 const externals = require('rollup-plugin-node-externals')
 const commonjs = require('@rollup/plugin-commonjs')
-const { DEFAULT_EXTENSIONS } = require('@babel/core')
 const resolve = require('@rollup/plugin-node-resolve')
 
 module.exports = defineConfig({
