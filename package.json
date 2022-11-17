@@ -41,6 +41,7 @@
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.3",
+    "types-json": "^1.2.2",
     "types-pkg-json": "^1.2.1",
     "types-tsconfig": "^1.2.1",
     "typescript": "^4.8.4"
@@ -125,7 +126,8 @@
           "ignoreIIFE": true
         }
       ],
-      "@typescript-eslint/ban-ts-comment": "off"
+      "@typescript-eslint/ban-ts-comment": "off",
+      "no-case-declarations": "off"
     },
     "env": {
       "node": true

@@ -1,5 +1,6 @@
 import ts from './ts'
 import pkg from './pkg'
+import lint from './lint'
 import prompts from 'prompts'
 import bundler from './bundler'
 import { basename } from 'path'
@@ -49,6 +50,24 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
 
   if (config.bundler) {
     struct = merge(struct, bundler(config))
+  }
+
+  if (config.lint) {
+    config.lint.forEach((rule) => {
+      struct = merge(struct, lint(rule, config))
+    })
+  }
+
+  if (config.vscode) {
+    // todo
+  }
+
+  if (config.test) {
+    // todo
+  }
+
+  if (config.test && config.e2e) {
+    // todo
   }
 
   return merge(struct, pkg(basename(dest), config, struct))

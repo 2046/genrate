@@ -2,6 +2,7 @@ import npm from '../utils/npm'
 import npa from 'npm-package-arg'
 import { parse } from '../configs'
 import { join, dirname } from 'path'
+import { exec } from '../utils/shell'
 import { ProjectStruct } from '../../types'
 import { TMP_PATH, TEMPLATE_PATH } from '../utils/constants'
 import { isDirectory, createDirSync, writeFileSync } from '../utils/fs'
@@ -50,7 +51,7 @@ function parsePackageName(packageName: string) {
 }
 
 function createProject(struct: Required<ProjectStruct>, dest: string) {
-  const { files, dirs } = struct
+  const { files, dirs, devDependencies } = struct
 
   for (const dir of dirs) {
     createDirSync(join(dest, dir))
@@ -65,5 +66,10 @@ function createProject(struct: Required<ProjectStruct>, dest: string) {
     }
 
     writeFileSync(filePath, content)
+  }
+
+  if (devDependencies.husky) {
+    exec('git init', { cwd: dest })
+    exec(`npx husky add .husky/pre-commit 'npx --no-install lint-staged'`, { cwd: dest })
   }
 }

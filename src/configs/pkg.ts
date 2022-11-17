@@ -10,6 +10,10 @@ export default function (name: string, templateConfig: TemplateConfigOptions, st
     config.scripts.build = 'npx rollup -c ./rollup.config.js'
   }
 
+  if (templateConfig.lint) {
+    config.scripts.prepare = 'husky install'
+  }
+
   return {
     files: [['package.json', stringify(config)]]
   }

@@ -1,7 +1,10 @@
 import type prompts from 'prompts'
+import type { JSONObject } from 'types-json'
 
 export type TemplateConfigPlugin = (struct: ProjectStruct, config: TemplateConfigOptions, dest: string) => Promise<ProjectStruct | void>
 export type TS_TEMPLATE_TYPE = 'web' | 'webpack' | 'nodepack'
+export type LINT_RULE = 'stylelint' | 'eslint' | 'commitlint'
+export type LINT_STAGE_TYPE = 'prettier' | 'eslint'
 
 export interface TemplateConfig {
   preprepare?: TemplateConfigPlugin
@@ -15,8 +18,8 @@ export interface TemplateConfigOptions {
   dirs?: Array<string>
   files?: Array<Array<string>>
   framework?: 'web' | 'vue' | 'react' | 'electron'
-  lint?: Array<'stylelint' | 'eslint' | 'commitlint'>
   bundler?: 'rollup' | 'webpack' | 'vite'
+  lint?: Array<LINT_RULE>
   vscode?: Array<string>
   test?: boolean
   e2e?: boolean
@@ -35,8 +38,8 @@ export interface TemplateConfigPackageJson {
 export interface ProjectStruct {
   dirs?: Array<string>
   files: Array<Array<string>>
-  dependencies?: Record<string, string>
-  devDependencies?: Record<string, string>
+  dependencies?: JSONObject
+  devDependencies?: JSONObject
 }
 
 export type RequiredByKeys<T, K extends keyof T = keyof T> = {

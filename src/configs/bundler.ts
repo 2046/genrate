@@ -1,11 +1,10 @@
 import tpl from '../templates'
 import { stringify } from '../utils'
+import { JSONObject } from 'types-json'
 import { TemplateConfigOptions, ProjectStruct } from '../../types'
 
 export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
-  const devDependencies: {
-    [key: string]: string
-  } = {
+  const devDependencies: JSONObject = {
     rollup: '3.2.5',
     '@babel/core': '7.20.2',
     '@babel/preset-env': '7.20.2',
