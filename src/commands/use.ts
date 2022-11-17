@@ -70,10 +70,5 @@ function createProject(struct: Required<ProjectStruct>, dest: string) {
 
   if (devDependencies.husky) {
     exec('git init', { cwd: dest })
-    exec(`npx husky add .husky/pre-commit 'npx --no-install lint-staged'`, { cwd: dest })
-  }
-
-  if (devDependencies.commitizen) {
-    exec(`npx husky add .husky/commit-msg 'npx --no-install commitlint --edit "$1"'`, { cwd: dest })
   }
 }

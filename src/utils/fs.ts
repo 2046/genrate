@@ -36,5 +36,5 @@ export function readPackageJson<T>(path: string) {
 }
 
 export function writeFileSync(path: string, data: string) {
-  fs.writeFileSync(path, data, { encoding: 'utf8' })
+  fs.writeFileSync(path, data, { encoding: 'utf8', mode: 0o0755 })
 }

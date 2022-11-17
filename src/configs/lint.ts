@@ -12,7 +12,8 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
     files = [
       ...files,
       ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'prettier', ts: templateConfig.ts })],
-      ['.prettierrc', tpl.lint('prettierrc')]
+      ['.prettierrc', tpl.lint('prettierrc')],
+      ['.husky/pre-commit', tpl.husky('npx --no-install lint-staged')]
     ]
   }
 
@@ -22,7 +23,13 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
     devDependencies['@commitlint/cli'] = '17.2.0'
     devDependencies['@commitlint/config-conventional'] = '17.2.0'
 
-    files = [...files, ['.czrc', tpl.lint('czrc')], ['.commitlintrc', tpl.lint('commitlintrc')], ['.cz-config.js', tpl.lint('czconfig')]]
+    files = [
+      ...files,
+      ['.czrc', tpl.lint('czrc')],
+      ['.cz-config.js', tpl.lint('czconfig')],
+      ['.commitlintrc', tpl.lint('commitlintrc')],
+      ['.husky/commit-msg', tpl.husky('npx --no-install commitlint --edit "$1"')]
+    ]
   }
 
   return {
