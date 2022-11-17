@@ -2,13 +2,15 @@ import chalk from 'chalk'
 import { join } from 'path'
 import npm from '../utils/npm'
 import table from 'text-table'
-import { readdir } from '../utils/fs'
 import { output, compareVersion } from '../utils'
+import { isDirectory, readdir } from '../utils/fs'
 import { TEMPLATE_PATH } from '../utils/constants'
 
 export default async function outdated() {
-  const templates = await readdir(TEMPLATE_PATH)
+  let templates = await readdir(TEMPLATE_PATH)
   const THead = ['Template', 'Current', 'Latest'].map((s) => chalk.underline(s))
+
+  templates = templates.filter((item) => isDirectory(join(TEMPLATE_PATH, item)))
 
   const TBody = templates.length
     ? await Promise.all(
