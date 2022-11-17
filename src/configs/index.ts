@@ -2,6 +2,7 @@ import ts from './ts'
 import pkg from './pkg'
 import lint from './lint'
 import prompts from 'prompts'
+import tpl from '../templates'
 import bundler from './bundler'
 import { basename } from 'path'
 import { cloneDeep } from 'lodash'
@@ -69,6 +70,8 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
   if (config.test && config.e2e) {
     // todo
   }
+
+  struct = merge(struct, { files: [['.gitignore', tpl.gitignore]] })
 
   return merge(struct, pkg(basename(dest), config, struct))
 }
