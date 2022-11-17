@@ -14,6 +14,10 @@ export default function (name: string, templateConfig: TemplateConfigOptions, st
     config.scripts.prepare = 'husky install'
   }
 
+  if (templateConfig.lint?.includes('commitlint')) {
+    config.scripts.commit = 'npx git-cz'
+  }
+
   return {
     files: [['package.json', stringify(config)]]
   }

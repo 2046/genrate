@@ -8,10 +8,21 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
 
   if (rule === 'stylelint') {
     devDependencies.prettier = '2.7.1'
+
     files = [
+      ...files,
       ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'prettier', ts: templateConfig.ts })],
       ['.prettierrc', tpl.lint('prettierrc')]
     ]
+  }
+
+  if (rule === 'commitlint') {
+    devDependencies.commitizen = '4.2.5'
+    devDependencies['cz-customizable'] = '7.0.0'
+    devDependencies['@commitlint/cli'] = '17.2.0'
+    devDependencies['@commitlint/config-conventional'] = '17.2.0'
+
+    files = [...files, ['.czrc', tpl.lint('czrc')], ['.commitlintrc', tpl.lint('commitlintrc')], ['.cz-config.js', tpl.lint('czconfig')]]
   }
 
   return {
