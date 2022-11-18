@@ -2,6 +2,7 @@ import ts from './ts'
 import pkg from './pkg'
 import lint from './lint'
 import prompts from 'prompts'
+import vscode from './vscode'
 import tpl from '../templates'
 import bundler from './bundler'
 import { basename } from 'path'
@@ -62,7 +63,7 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
   }
 
   if (config.vscode) {
-    // todo
+    struct = merge(struct, vscode(config.vscode))
   }
 
   if (config.test) {
