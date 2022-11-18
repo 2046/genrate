@@ -102,8 +102,6 @@ function defaultStruct(): Required<ProjectStruct> {
 }
 
 function mergeLintstagedConfig(struct: ProjectStruct) {
-  const files = struct.files.filter(([fileName]) => fileName !== '.lintstagedrc')
-
   const lintstagedrc = struct.files
     .filter(([fileName]) => fileName === '.lintstagedrc')
     .reduce((result: JSONObject, file: Array<string>) => {
@@ -122,5 +120,7 @@ function mergeLintstagedConfig(struct: ProjectStruct) {
       return result
     }, {})
 
-  return merge(struct, { files: [...files, ['.lintstagedrc', stringify(lintstagedrc)]] })
+  struct.files = struct.files.filter(([fileName]) => fileName !== '.lintstagedrc')
+
+  return merge(struct, { files: [['.lintstagedrc', stringify(lintstagedrc)]] })
 }
