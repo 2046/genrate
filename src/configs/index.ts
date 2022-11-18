@@ -3,7 +3,7 @@ import pkg from './pkg'
 import lint from './lint'
 import prompts from 'prompts'
 import vscode from './vscode'
-import tpl from '../templates'
+import ignore from './ignore'
 import bundler from './bundler'
 import { basename } from 'path'
 import { cloneDeep } from 'lodash'
@@ -74,8 +74,8 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
     // todo
   }
 
+  struct = merge(struct, ignore('git'))
   struct = mergeLintstagedConfig(struct)
-  struct = merge(struct, { files: [['.gitignore', tpl.gitignore]] })
 
   return merge(struct, pkg(basename(dest), config, struct))
 }
