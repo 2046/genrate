@@ -11,9 +11,9 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
 
     files = [
       ...files,
-      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'prettier', ts: templateConfig.ts })],
       ['.prettierrc', tpl.lint('prettierrc')],
-      ['.husky/pre-commit', tpl.husky('npx --no-install lint-staged')]
+      ['.husky/pre-commit', tpl.husky('npx --no-install lint-staged')],
+      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'prettier', ts: templateConfig.ts })]
     ]
   }
 
@@ -30,6 +30,25 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
       ['.commitlintrc', tpl.lint('commitlintrc')],
       ['.husky/commit-msg', tpl.husky('npx --no-install commitlint --edit "$1"')]
     ]
+  }
+
+  if (rule === 'eslint') {
+    devDependencies.eslint = '8.26.0'
+    files = [
+      ...files,
+      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'eslint', ts: templateConfig.ts })],
+      ['.eslintrc', tpl.lint('eslintrc', { prettier: templateConfig.lint?.includes('stylelint'), ts: templateConfig.ts })]
+    ]
+
+    if (templateConfig.ts) {
+      devDependencies['@typescript-eslint/parser'] = '5.42.0'
+      devDependencies['@typescript-eslint/eslint-plugin'] = '5.42.0'
+    }
+
+    if (templateConfig.lint?.includes('stylelint')) {
+      devDependencies['eslint-plugin-prettier'] = '4.2.1'
+      devDependencies['eslint-config-prettier'] = '8.5.0'
+    }
   }
 
   return {
