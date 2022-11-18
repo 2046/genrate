@@ -6,6 +6,8 @@ import tpl from '../templates'
 import bundler from './bundler'
 import { basename } from 'path'
 import { cloneDeep } from 'lodash'
+import { stringify } from '../utils'
+import { JSONObject } from 'types-json'
 import { ProjectStruct, TemplateConfig, TemplateConfigOptions } from '../../types'
 
 export async function parse(templateConfig: TemplateConfig, dest: string) {
@@ -71,6 +73,7 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
     // todo
   }
 
+  struct = mergeLintstagedConfig(struct)
   struct = merge(struct, { files: [['.gitignore', tpl.gitignore]] })
 
   return merge(struct, pkg(basename(dest), config, struct))
@@ -95,4 +98,28 @@ function defaultStruct(): Required<ProjectStruct> {
     dependencies: {},
     devDependencies: {}
   }
+}
+
+function mergeLintstagedConfig(struct: ProjectStruct) {
+  const files = struct.files.filter(([fileName]) => fileName !== '.lintstagedrc')
+
+  const lintstagedrc = struct.files
+    .filter(([fileName]) => fileName === '.lintstagedrc')
+    .reduce((result: JSONObject, file: Array<string>) => {
+      const json = <JSONObject>JSON.parse(file[1])
+
+      for (const key in json) {
+        if (result[key] && Array.isArray(result[key])) {
+          result[key] = [...(<Array<string>>result[key]), <string>json[key]]
+        } else if (result[key]) {
+          result[key] = [<string>result[key], <string>json[key]]
+        } else {
+          result[key] = json[key]
+        }
+      }
+
+      return result
+    }, {})
+
+  return merge(struct, { files: [...files, ['.lintstagedrc', stringify(lintstagedrc)]] })
 }
