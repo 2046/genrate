@@ -6,9 +6,9 @@ import vscode from './vscode'
 import ignore from './ignore'
 import bundler from './bundler'
 import { basename } from 'path'
-import { cloneDeep } from 'lodash'
 import { stringify } from '../utils'
 import { JSONObject } from 'types-json'
+import { cloneDeep, uniq } from 'lodash'
 import { ProjectStruct, TemplateConfig, TemplateConfigOptions } from '../../types'
 
 export async function parse(templateConfig: TemplateConfig, dest: string) {
@@ -85,8 +85,8 @@ function merge(object: ProjectStruct, source: ProjectStruct): Required<ProjectSt
   const sourceClone = Object.assign({}, defaultStruct(), source)
 
   return {
-    dirs: [...objectClone.dirs, ...sourceClone.dirs],
     files: [...objectClone.files, ...sourceClone.files],
+    dirs: uniq([...objectClone.dirs, ...sourceClone.dirs]),
     dependencies: Object.assign({}, objectClone.dependencies, sourceClone.dependencies),
     devDependencies: Object.assign({}, objectClone.devDependencies, sourceClone.devDependencies)
   }
