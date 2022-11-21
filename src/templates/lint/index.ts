@@ -5,18 +5,18 @@ import prettierrc from './prettierrc'
 import { stringify } from '../../utils'
 import lintstagedrc from './lintstagedrc'
 import commitlintrc from './commitlintrc'
-import { LINT_STAGE_TYPE } from '../../../types'
+import { LINT_STAGE_TYPE, TemplateConfigOptions } from '../../../types'
 
 function rc(lintrc: 'czrc'): string
 function rc(lintrc: 'czconfig'): string
 function rc(lintrc: 'prettierrc'): string
 function rc(lintrc: 'commitlintrc'): string
-function rc(lintrc: 'eslintrc', options: { prettier?: boolean; ts?: boolean }): string
-function rc(lintrc: 'lintstagedrc', options: { type: LINT_STAGE_TYPE; ts?: boolean }): string
-function rc(lintrc: string, options?: { type?: LINT_STAGE_TYPE; prettier?: boolean; ts?: boolean }): string {
+function rc(lintrc: 'eslintrc', options: { templateConfig: TemplateConfigOptions }): string
+function rc(lintrc: 'lintstagedrc', options: { type: LINT_STAGE_TYPE; templateConfig?: TemplateConfigOptions }): string
+function rc(lintrc: string, options?: { type?: LINT_STAGE_TYPE; templateConfig?: TemplateConfigOptions }): string {
   switch (lintrc) {
     case 'lintstagedrc':
-      const [key, value] = lintstagedrc(options?.type, options?.ts)
+      const [key, value] = lintstagedrc(options?.type, options?.templateConfig?.ts)
 
       return stringify({ [key]: value })
     case 'prettierrc':
@@ -28,7 +28,7 @@ function rc(lintrc: string, options?: { type?: LINT_STAGE_TYPE; prettier?: boole
     case 'czconfig':
       return `module.exports = ${stringify(czconfig)}`
     case 'eslintrc':
-      return stringify(eslintrc(options?.prettier, options?.ts))
+      return stringify(eslintrc(<TemplateConfigOptions>options?.templateConfig))
     default:
       return ''
   }

@@ -13,7 +13,7 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
       ...files,
       ['.prettierrc', tpl.lint('prettierrc')],
       ['.husky/pre-commit', tpl.husky('npx --no-install lint-staged')],
-      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'prettier', ts: templateConfig.ts })]
+      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'prettier', templateConfig })]
     ]
   }
 
@@ -33,13 +33,11 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
   }
 
   if (rule === 'eslint') {
-    const isPrettier = templateConfig.lint?.includes('stylelint')
-
     devDependencies.eslint = '8.26.0'
     files = [
       ...files,
-      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'eslint', ts: templateConfig.ts })],
-      ['.eslintrc', tpl.lint('eslintrc', { prettier: isPrettier, ts: templateConfig.ts })]
+      ['.eslintrc', tpl.lint('eslintrc', { templateConfig })],
+      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'eslint', templateConfig })]
     ]
 
     if (templateConfig.ts) {
@@ -47,7 +45,7 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
       devDependencies['@typescript-eslint/eslint-plugin'] = '5.42.0'
     }
 
-    if (isPrettier) {
+    if (templateConfig.lint?.includes('stylelint')) {
       devDependencies['eslint-plugin-prettier'] = '4.2.1'
       devDependencies['eslint-config-prettier'] = '8.5.0'
     }
