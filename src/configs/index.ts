@@ -8,7 +8,7 @@ import bundler from './bundler'
 import { basename } from 'path'
 import { stringify } from '../utils'
 import { JSONObject } from 'types-json'
-import { cloneDeep, uniq } from 'lodash'
+import { cloneDeep, uniq, isEmpty } from 'lodash'
 import { ProjectStruct, TemplateConfig, TemplateConfigOptions } from '../../types'
 
 export async function parse(templateConfig: TemplateConfig, dest: string) {
@@ -122,5 +122,5 @@ function mergeLintstagedConfig(struct: ProjectStruct) {
 
   struct.files = struct.files.filter(([fileName]) => fileName !== '.lintstagedrc')
 
-  return merge(struct, { files: [['.lintstagedrc', stringify(lintstagedrc)]] })
+  return merge(struct, { files: isEmpty(lintstagedrc) ? [] : [['.lintstagedrc', stringify(lintstagedrc)]] })
 }
