@@ -1,6 +1,7 @@
 import ts from './ts'
 import pkg from './pkg'
 import lint from './lint'
+import test from './test'
 import prompts from 'prompts'
 import vscode from './vscode'
 import ignore from './ignore'
@@ -67,7 +68,7 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
   }
 
   if (config.test) {
-    // todo
+    struct = merge(struct, test(config))
   }
 
   if (config.test && config.e2e) {

@@ -18,6 +18,10 @@ export default function (name: string, templateConfig: TemplateConfigOptions, st
     config.scripts.commit = 'npx git-cz'
   }
 
+  if (templateConfig.test) {
+    config.scripts.test = 'npx jest'
+  }
+
   return {
     files: [['package.json', stringify(config)]]
   }
