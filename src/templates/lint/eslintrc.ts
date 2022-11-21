@@ -39,9 +39,9 @@ export default function (templateConfig: TemplateConfigOptions) {
 }
 
 function getEnv(templateConfig: TemplateConfigOptions) {
-  const env = {
-    node: false,
-    browser: false
+  const env: JSONObject = {
+    node: undefined,
+    browser: undefined
   }
 
   if (templateConfig.framework) {
