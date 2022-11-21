@@ -37,6 +37,7 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
     files = [
       ...files,
       ['.eslintrc', tpl.lint('eslintrc', { templateConfig })],
+      ['.husky/pre-commit', tpl.husky('npx --no-install lint-staged')],
       ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'eslint', templateConfig })]
     ]
 
@@ -48,6 +49,7 @@ export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions)
     if (templateConfig.lint?.includes('stylelint')) {
       devDependencies['eslint-plugin-prettier'] = '4.2.1'
       devDependencies['eslint-config-prettier'] = '8.5.0'
+      files = files.filter(([fileName]) => fileName !== '.husky/pre-commit')
     }
   }
 
