@@ -51,7 +51,7 @@ function parsePackageName(packageName: string) {
 }
 
 function createProject(struct: Required<ProjectStruct>, dest: string) {
-  const { files, dirs, devDependencies } = struct
+  const { files, dirs } = struct
 
   for (const dir of dirs) {
     createDirSync(join(dest, dir))
@@ -68,7 +68,5 @@ function createProject(struct: Required<ProjectStruct>, dest: string) {
     writeFileSync(filePath, content)
   }
 
-  if (devDependencies.husky) {
-    exec('git init', { cwd: dest })
-  }
+  exec('git init', { cwd: dest })
 }
