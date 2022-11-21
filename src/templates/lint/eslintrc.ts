@@ -4,6 +4,7 @@ import { TemplateConfigOptions } from '../../../types'
 export default function (templateConfig: TemplateConfigOptions) {
   const config: JSONObject = {
     root: true,
+    plugins: [],
     extends: ['eslint:recommended'],
     rules: {
       'no-case-declarations': 'off'
@@ -12,6 +13,7 @@ export default function (templateConfig: TemplateConfigOptions) {
   }
 
   if (templateConfig.lint?.includes('stylelint')) {
+    config.plugins = [...(<Array<string>>config.plugins), 'prettier']
     config.rules = Object.assign({}, config.rules, { 'prettier/prettier': 'error' })
     config.extends = [...(<Array<string>>config.extends), 'plugin:prettier/recommended']
   }
@@ -19,7 +21,7 @@ export default function (templateConfig: TemplateConfigOptions) {
   if (templateConfig.ts) {
     config.parser = '@typescript-eslint/parser'
     config.parserOptions = { project: './tsconfig.json' }
-    config.plugins = ['@typescript-eslint', 'prettier']
+    config.plugins = [...(<Array<string>>config.plugins), '@typescript-eslint']
     config.rules = Object.assign({}, config.rules, {
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }]
@@ -29,6 +31,8 @@ export default function (templateConfig: TemplateConfigOptions) {
       'plugin:@typescript-eslint/recommended',
       'plugin:@typescript-eslint/recommended-requiring-type-checking'
     ]
+  } else {
+    config.parserOptions = { ecmaVersion: 'latest' }
   }
 
   return config
