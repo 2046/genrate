@@ -32,7 +32,7 @@ export default function (templateConfig: TemplateConfigOptions) {
       'plugin:@typescript-eslint/recommended-requiring-type-checking'
     ]
   } else {
-    config.parserOptions = { ecmaVersion: 'latest' }
+    config.parserOptions = { ecmaVersion: 'latest', sourceType: 'module' }
   }
 
   return config
