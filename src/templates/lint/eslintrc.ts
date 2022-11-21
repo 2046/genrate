@@ -41,6 +41,7 @@ export default function (templateConfig: TemplateConfigOptions) {
 function getEnv(templateConfig: TemplateConfigOptions) {
   const env: JSONObject = {
     node: undefined,
+    jest: undefined,
     browser: undefined
   }
 
@@ -55,6 +56,10 @@ function getEnv(templateConfig: TemplateConfigOptions) {
 
   if (templateConfig.lib) {
     env.node = true
+  }
+
+  if (templateConfig.test && !templateConfig.ts) {
+    env.jest = true
   }
 
   return env
