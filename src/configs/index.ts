@@ -62,7 +62,7 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
     })
   }
 
-  if (config.vscode) {
+  if (config.vscode && !isEmpty(config.vscode)) {
     struct = merge(struct, vscode(config.vscode))
   }
 
