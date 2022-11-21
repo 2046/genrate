@@ -5,9 +5,10 @@ export default function (templateConfig: TemplateConfigOptions) {
   switch (templateConfig.bundler) {
     case 'rollup':
       if (templateConfig.ts) {
-        return rollup.tsTemplate
+        const { lib = false } = templateConfig
+        return rollup.tsTemplate(lib)
       } else {
-        return rollup.jsTemplate
+        return rollup.jsTemplate()
       }
     default:
       return ''
