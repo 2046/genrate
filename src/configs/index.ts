@@ -1,5 +1,6 @@
 import ts from './ts'
 import pkg from './pkg'
+import e2e from './e2e'
 import lint from './lint'
 import test from './test'
 import prompts from 'prompts'
@@ -72,7 +73,7 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
   }
 
   if (config.test && config.e2e) {
-    // todo
+    struct = merge(struct, e2e())
   }
 
   struct = merge(struct, ignore('git'))

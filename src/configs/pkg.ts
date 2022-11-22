@@ -22,6 +22,10 @@ export default function (name: string, templateConfig: TemplateConfigOptions, st
     config.scripts.test = 'npx jest'
   }
 
+  if (templateConfig.test && templateConfig.e2e) {
+    config.scripts.e2e = 'npx cypress open'
+  }
+
   return {
     files: [['package.json', stringify(config)]]
   }

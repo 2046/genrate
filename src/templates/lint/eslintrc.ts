@@ -35,6 +35,10 @@ export default function (templateConfig: TemplateConfigOptions) {
     config.parserOptions = { ecmaVersion: 'latest', sourceType: 'module' }
   }
 
+  if (templateConfig.test && templateConfig.e2e) {
+    config.ignorePatterns = ['cypress.config.js', '**/cypress/**']
+  }
+
   return config
 }
 
