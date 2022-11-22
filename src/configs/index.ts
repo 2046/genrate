@@ -54,10 +54,6 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
     struct = merge(struct, { files: config.files })
   }
 
-  if (config.bundler) {
-    struct = merge(struct, bundler(config))
-  }
-
   if (config.lint) {
     config.lint.forEach((rule) => {
       struct = merge(struct, lint(rule, config))
@@ -77,6 +73,7 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
   }
 
   struct = merge(struct, ignore('git'))
+  struct = merge(struct, bundler(config))
   struct = mergeLintstagedConfig(struct)
 
   return merge(struct, pkg(basename(dest), config, struct))

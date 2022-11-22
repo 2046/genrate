@@ -18,7 +18,6 @@ export interface TemplateConfigOptions {
   dirs?: Array<string>
   files?: Array<Array<string>>
   framework?: 'web' | 'vue' | 'react' | 'electron' | 'nest'
-  bundler?: 'rollup' | 'webpack' | 'vite'
   lint?: Array<LINT_RULE>
   vscode?: Array<string>
   test?: boolean

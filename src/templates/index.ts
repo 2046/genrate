@@ -5,7 +5,7 @@ import lint from './lint'
 import test from './test'
 import babel from './babel'
 import husky from './husky'
-import bundler from './bundler'
+import rollup from './rollup'
 import gitignore from './gitignore'
 
-export default { ts, pkg, e2e, test, babel, bundler, lint, husky, gitignore }
+export default { ts, pkg, e2e, test, babel, rollup, lint, husky, gitignore }

@@ -1,4 +1,4 @@
-const tsTemplate = (lib: boolean) => `const { defineConfig } = require('rollup')
+const tsTemplate = `const { defineConfig } = require('rollup')
 const json = require('@rollup/plugin-json')
 const clean = require('rollup-plugin-delete')
 const babel = require('@rollup/plugin-babel')
@@ -23,7 +23,7 @@ module.exports = defineConfig({
     }),
     commonjs(),
     json(),
-    ${lib ? 'typescript({ useTsconfigDeclarationDir: true })' : 'typescript()'},
+    typescript({ useTsconfigDeclarationDir: true }),
     babel({
       babelHelpers: 'runtime',
       exclude: '**/node_modules/**',
@@ -32,7 +32,7 @@ module.exports = defineConfig({
   ]
 })`
 
-const jsTemplate = () => `const { defineConfig } = require('rollup')
+const jsTemplate = `const { defineConfig } = require('rollup')
 const json = require('@rollup/plugin-json')
 const clean = require('rollup-plugin-delete')
 const babel = require('@rollup/plugin-babel')

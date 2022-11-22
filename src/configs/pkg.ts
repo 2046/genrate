@@ -6,7 +6,7 @@ import { ProjectStruct, RequiredByKeys, TemplateConfigOptions } from '../../type
 export default function (name: string, templateConfig: TemplateConfigOptions, struct: ProjectStruct) {
   const config: RequiredByKeys<PackageJSON, 'scripts'> = tpl.pkg(name, struct)
 
-  if (templateConfig.bundler && templateConfig.bundler === 'rollup') {
+  if (templateConfig.lib) {
     config.scripts.build = 'npx rollup -c ./rollup.config.js'
   }
 
