@@ -1,6 +1,6 @@
-import tpl from '../templates'
+import tpl from '../../templates'
 import { JSONObject } from 'types-json'
-import { ProjectStruct, LINT_RULE, TemplateConfigOptions } from '../../types'
+import { ProjectStruct, LINT_RULE, TemplateConfigOptions } from '../../../types'
 
 export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions): ProjectStruct {
   let files: Array<Array<string>> = []

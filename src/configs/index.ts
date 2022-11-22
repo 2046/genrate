@@ -1,13 +1,8 @@
-import ts from './ts'
-import pkg from './pkg'
-import e2e from './e2e'
-import lint from './lint'
-import test from './test'
 import prompts from 'prompts'
-import vscode from './vscode'
 import ignore from './ignore'
 import bundler from './bundler'
 import { basename } from 'path'
+import * as parser from './parser'
 import { stringify } from '../utils'
 import { JSONObject } from 'types-json'
 import { cloneDeep, uniq, isEmpty } from 'lodash'
@@ -42,41 +37,21 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
 }
 
 function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOptions, dest: string) {
-  if (config.ts) {
-    struct = merge(struct, ts(config))
-  }
+  const { dirs = [], files = [], lint = [] } = config
 
-  if (config.dirs) {
-    struct = merge(struct, { dirs: config.dirs, files: [] })
-  }
-
-  if (config.files) {
-    struct = merge(struct, { files: config.files })
-  }
-
-  if (config.lint) {
-    config.lint.forEach((rule) => {
-      struct = merge(struct, lint(rule, config))
-    })
-  }
-
-  if (config.vscode && !isEmpty(config.vscode)) {
-    struct = merge(struct, vscode(config.vscode))
-  }
-
-  if (config.test) {
-    struct = merge(struct, test(config))
-  }
-
-  if (config.test && config.e2e) {
-    struct = merge(struct, e2e())
-  }
-
+  struct = merge(struct, { files })
   struct = merge(struct, ignore('git'))
   struct = merge(struct, bundler(config))
+  struct = merge(struct, { dirs, files: [] })
+  struct = merge(struct, parser.tsConfig(config))
+  struct = merge(struct, parser.e2eConfig(config))
+  struct = merge(struct, parser.testConfig(config))
+  struct = merge(struct, parser.vsCodeConfig(config))
+  lint.forEach((rule) => (struct = merge(struct, parser.lintConfig(rule, config))))
+
   struct = mergeLintstagedConfig(struct)
 
-  return merge(struct, pkg(basename(dest), config, struct))
+  return merge(struct, parser.pkgConfig(basename(dest), config, struct))
 }
 
 function merge(object: ProjectStruct, source: ProjectStruct): Required<ProjectStruct> {

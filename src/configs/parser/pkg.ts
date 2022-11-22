@@ -1,7 +1,7 @@
-import tpl from '../templates'
-import { stringify } from '../utils'
+import tpl from '../../templates'
+import { stringify } from '../../utils'
 import { PackageJSON } from 'types-pkg-json'
-import { ProjectStruct, RequiredByKeys, TemplateConfigOptions } from '../../types'
+import { ProjectStruct, RequiredByKeys, TemplateConfigOptions } from '../../../types'
 
 export default function (name: string, templateConfig: TemplateConfigOptions, struct: ProjectStruct) {
   const config: RequiredByKeys<PackageJSON, 'scripts'> = tpl.pkg(name, struct)

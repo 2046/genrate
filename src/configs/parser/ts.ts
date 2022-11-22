@@ -1,10 +1,9 @@
-import tpl from '../templates'
-import { stringify } from '../utils'
-import { ProjectStruct, TemplateConfigOptions } from '../../types'
+import tpl from '../../templates'
+import { stringify } from '../../utils'
+import { ProjectStruct, TemplateConfigOptions } from '../../../types'
 
-export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
+export default function ({ ts, lib, framework }: TemplateConfigOptions): ProjectStruct {
   const devDependencies = { typescript: '4.8.4' }
-  const { ts = false, lib = false, framework = '' } = templateConfig
 
   if (!ts) {
     return { files: [] }
