@@ -1,37 +1,31 @@
-import { RequiredByKeys, TS_TEMPLATE_TYPE } from '../../types'
+import { stringify } from '../utils'
+import { RequiredByKeys } from '../../types'
 import { TSConfigJSON } from 'types-tsconfig'
 
-export default function (type?: TS_TEMPLATE_TYPE) {
-  const config: RequiredByKeys<TSConfigJSON, 'compilerOptions' | 'include'> = {
-    compilerOptions: {
-      strict: true,
-      target: 'ESNext',
-      module: 'ESNext',
-      skipLibCheck: true,
-      importHelpers: true,
-      removeComments: true,
-      esModuleInterop: true,
-      moduleResolution: 'node',
-      resolveJsonModule: true,
-      forceConsistentCasingInFileNames: true
-    },
-    include: ['src/**/*.ts']
-  }
+const defaultOptions: RequiredByKeys<TSConfigJSON, 'compilerOptions' | 'include'> = {
+  compilerOptions: {
+    strict: true,
+    lib: ['ESNext'],
+    target: 'ESNext',
+    module: 'ESNext',
+    skipLibCheck: true,
+    importHelpers: true,
+    removeComments: true,
+    esModuleInterop: true,
+    moduleResolution: 'node',
+    resolveJsonModule: true,
+    forceConsistentCasingInFileNames: true
+  },
+  include: ['src/**/*.ts']
+}
 
-  if (type === 'webpack') {
-    config.compilerOptions.declaration = true
-    config.compilerOptions.declarationDir = 'types'
-    config.compilerOptions.lib = ['ESNext', 'DOM']
+export default {
+  node: stringify(defaultOptions),
+  web: stringify(Object.assign({}, defaultOptions, { compilerOptions: { lib: ['ESNext', 'DOM'] } })),
+  lib: {
+    node: stringify(Object.assign({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types' } })),
+    web: stringify(
+      Object.assign({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types', lib: ['ESNext', 'DOM'] } })
+    )
   }
-
-  if (type === 'nodepack') {
-    config.compilerOptions.declaration = true
-    config.compilerOptions.declarationDir = 'types'
-  }
-
-  if (type === 'web') {
-    config.compilerOptions.lib = ['ESNext', 'DOM']
-  }
-
-  return config
 }

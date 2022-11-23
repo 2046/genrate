@@ -1,31 +1,27 @@
 import tpl from '../../templates'
-import { stringify } from '../../utils'
 import { ProjectStruct, TemplateConfigOptions } from '../../../types'
 
 export default function ({ ts, lib, framework }: TemplateConfigOptions): ProjectStruct {
-  const devDependencies = { typescript: '4.8.4' }
+  let files = [['tsconfig.json', tpl.ts.node]]
 
   if (!ts) {
     return { files: [] }
   }
 
-  if (lib && framework) {
-    switch (framework) {
-      case 'web':
-        return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts('webpack'))]] }
-    }
+  if (lib) {
+    files = [['tsconfig.json', tpl.ts.lib.node]]
   }
 
   if (framework) {
-    switch (framework) {
-      case 'web':
-        return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts('web'))]] }
-    }
+    files = [['tsconfig.json', tpl.ts.web]]
   }
 
-  if (lib) {
-    return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts('nodepack'))]] }
+  if (lib && framework) {
+    files = [['tsconfig.json', tpl.ts.lib.web]]
   }
 
-  return { devDependencies, files: [['tsconfig.json', stringify(tpl.ts())]] }
+  return {
+    files,
+    devDependencies: { typescript: '4.8.4' }
+  }
 }
