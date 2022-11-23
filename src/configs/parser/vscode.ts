@@ -1,11 +1,14 @@
+import { isEmpty } from 'lodash'
 import { stringify } from '../../utils'
 import { ProjectStruct, TemplateConfigOptions } from '../../../types'
 
 export default function ({ vscode }: TemplateConfigOptions): ProjectStruct {
-  return vscode?.length
-    ? {
-        dirs: ['.vscode'],
-        files: [['.vscode/extensions.json', stringify({ recommendations: vscode })]]
-      }
-    : { files: [] }
+  if (isEmpty(vscode)) {
+    return { files: [] }
+  }
+
+  return {
+    dirs: ['.vscode'],
+    files: [['.vscode/extensions.json', stringify({ recommendations: vscode })]]
+  }
 }
