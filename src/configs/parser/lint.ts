@@ -1,61 +1,114 @@
+import { isEmpty } from 'lodash'
 import tpl from '../../templates'
+import { stringify } from '../../utils'
 import { JSONObject } from 'types-json'
-import { ProjectStruct, LINT_RULE, TemplateConfigOptions } from '../../../types'
+import { ProjectStruct, TemplateConfigOptions } from '../../../types'
 
-export default function (rule: LINT_RULE, templateConfig: TemplateConfigOptions): ProjectStruct {
-  let files: Array<Array<string>> = []
-  const devDependencies: JSONObject = { husky: '8.0.1', 'lint-staged': '13.0.3' }
+export default function (rule: string, templateConfig: TemplateConfigOptions): ProjectStruct {
+  if (rule === 'husky') {
+    let files: Array<Array<string>> = []
+    const { lint = [] } = templateConfig
+
+    if (lint.includes('stylelint') || lint.includes('eslint')) {
+      files = [...files, ['.husky/pre-commit', tpl.lint.husky('npx --no-install lint-staged')]]
+    }
+
+    if (lint.includes('commitlint')) {
+      files = [...files, ['.husky/commit-msg', tpl.lint.husky('npx --no-install commitlint --edit "$1"')]]
+    }
+
+    if (lint.includes('stylelint')) {
+      files = [...files, ['.lintstagedrc', tpl.lint.lintstaged('prettier', templateConfig)]]
+    }
+
+    if (lint.includes('eslint')) {
+      files = [...files, ['.lintstagedrc', tpl.lint.lintstaged('eslint', templateConfig)]]
+    }
+
+    files = mergeLintstagedRc(files)
+
+    return {
+      files,
+      dirs: ['.husky'],
+      devDependencies: { husky: '8.0.1', 'lint-staged': '13.0.3' }
+    }
+  }
 
   if (rule === 'stylelint') {
-    devDependencies.prettier = '2.7.1'
-
-    files = [
-      ...files,
-      ['.prettierrc', tpl.lint('prettierrc')],
-      ['.husky/pre-commit', tpl.husky('npx --no-install lint-staged')],
-      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'prettier', templateConfig })]
-    ]
+    return {
+      devDependencies: { prettier: '2.7.1' },
+      files: [['.prettierrc', tpl.lint.prettier]]
+    }
   }
 
   if (rule === 'commitlint') {
-    devDependencies.commitizen = '4.2.5'
-    devDependencies['cz-customizable'] = '7.0.0'
-    devDependencies['@commitlint/cli'] = '17.2.0'
-    devDependencies['@commitlint/config-conventional'] = '17.2.0'
-
-    files = [
-      ...files,
-      ['.czrc', tpl.lint('czrc')],
-      ['.cz-config.js', tpl.lint('czconfig')],
-      ['.commitlintrc', tpl.lint('commitlintrc')],
-      ['.husky/commit-msg', tpl.husky('npx --no-install commitlint --edit "$1"')]
-    ]
+    return {
+      devDependencies: {
+        commitizen: '4.2.5',
+        'cz-customizable': '7.0.0',
+        '@commitlint/cli': '17.2.0',
+        '@commitlint/config-conventional': '17.2.0'
+      },
+      files: [
+        ['.czrc', tpl.lint.cz],
+        ['.cz-config.js', tpl.lint.czconf],
+        ['.commitlintrc', tpl.lint.commitlint]
+      ]
+    }
   }
 
   if (rule === 'eslint') {
-    devDependencies.eslint = '8.26.0'
-    files = [
-      ...files,
-      ['.eslintrc', tpl.lint('eslintrc', { templateConfig })],
-      ['.husky/pre-commit', tpl.husky('npx --no-install lint-staged')],
-      ['.lintstagedrc', tpl.lint('lintstagedrc', { type: 'eslint', templateConfig })]
-    ]
+    let devDependencies: JSONObject = {
+      eslint: '8.26.0'
+    }
 
     if (templateConfig.ts) {
-      devDependencies['@typescript-eslint/parser'] = '5.42.0'
-      devDependencies['@typescript-eslint/eslint-plugin'] = '5.42.0'
+      devDependencies = Object.assign({}, devDependencies, {
+        '@typescript-eslint/parser': '5.42.0',
+        '@typescript-eslint/eslint-plugin': '5.42.0'
+      })
     }
 
     if (templateConfig.lint?.includes('stylelint')) {
-      devDependencies['eslint-plugin-prettier'] = '4.2.1'
-      devDependencies['eslint-config-prettier'] = '8.5.0'
-      files = files.filter(([fileName]) => fileName !== '.husky/pre-commit')
+      devDependencies = Object.assign({}, devDependencies, {
+        'eslint-plugin-prettier': '4.2.1',
+        'eslint-config-prettier': '8.5.0'
+      })
+    }
+
+    return {
+      devDependencies,
+      files: [['.eslintrc', tpl.lint.eslint(templateConfig)]]
     }
   }
 
-  return {
-    files,
-    dirs: ['.husky'],
-    devDependencies
+  return { files: [] }
+}
+
+function mergeLintstagedRc(files: Array<Array<string>>) {
+  const lintstagedrc = files
+    .filter(([fileName]) => fileName === '.lintstagedrc')
+    .reduce((result: JSONObject, file: Array<string>) => {
+      const json = <JSONObject>JSON.parse(file[1])
+
+      for (const key in json) {
+        if (result[key] && Array.isArray(result[key])) {
+          result[key] = [...(<Array<string>>result[key]), <string>json[key]]
+        } else if (result[key]) {
+          result[key] = [<string>result[key], <string>json[key]]
+        } else {
+          result[key] = json[key]
+        }
+      }
+
+      return result
+    }, {})
+
+  if (isEmpty(lintstagedrc)) {
+    return files
+  } else {
+    files = files.filter(([fileName]) => fileName !== '.lintstagedrc')
+
+    return [...files, ['.lintstagedrc', stringify(lintstagedrc)]]
   }
 }

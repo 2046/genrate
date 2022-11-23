@@ -1,3 +1,4 @@
+import { stringify } from '../../utils'
 import { JSONObject } from 'types-json'
 import { TemplateConfigOptions } from '../../../types'
 
@@ -39,30 +40,27 @@ export default function (templateConfig: TemplateConfigOptions) {
     config.ignorePatterns = ['cypress.config.js', '**/cypress/**']
   }
 
-  return config
+  return stringify(config)
 }
 
 function getEnv(templateConfig: TemplateConfigOptions) {
-  const env: JSONObject = {
-    node: undefined,
-    jest: undefined,
-    browser: undefined
+  const env: JSONObject = {}
+  const { lib, framework = '', test, ts } = templateConfig
+
+  if (lib) {
+    env.node = true
   }
 
-  if (templateConfig.framework) {
+  if (framework) {
     env.node = true
     env.browser = true
   }
 
-  if (templateConfig.framework === 'nest') {
+  if (['nest'].includes(framework)) {
     env.browser = false
   }
 
-  if (templateConfig.lib) {
-    env.node = true
-  }
-
-  if (templateConfig.test && !templateConfig.ts) {
+  if (test && !ts) {
     env.jest = true
   }
 

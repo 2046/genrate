@@ -1,13 +1,17 @@
-import { LINT_STAGE_TYPE } from '../../../types'
+import { stringify } from '../../utils'
+import { TemplateConfigOptions } from '../../../types'
 
-export default function (type?: LINT_STAGE_TYPE, ts?: boolean) {
+export default function (type: string, templateConfig: TemplateConfigOptions) {
+  const { ts } = templateConfig
   const extName = ts ? ['js', 'jsx', 'ts', 'tsx'] : ['js', 'jsx']
 
   if (type === 'prettier') {
-    return [`*.{${extName.join(',')}}`, 'prettier --write']
-  } else if (type === 'eslint') {
-    return [`*.{${extName.join(',')}}`, 'eslint --fix']
-  } else {
-    return []
+    return stringify({ [`*.{${extName.join(',')}}`]: 'prettier --write' })
   }
+
+  if (type === 'eslint') {
+    return stringify({ [`*.{${extName.join(',')}}`]: 'eslint --fix' })
+  }
+
+  return ''
 }
