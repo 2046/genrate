@@ -1,32 +1,27 @@
-import tpl from '../../templates'
 import { stringify } from '../../utils'
-import { PackageJSON } from 'types-pkg-json'
-import { ProjectStruct, RequiredByKeys, TemplateConfigOptions } from '../../../types'
+import { ProjectStruct, TemplateConfigOptions } from '../../../types'
+import { isEmpty } from 'lodash'
 
-export default function (name: string, templateConfig: TemplateConfigOptions, struct: ProjectStruct) {
-  const config: RequiredByKeys<PackageJSON, 'scripts'> = tpl.pkg(name, struct)
-
-  if (templateConfig.lib) {
-    config.scripts.build = 'npx rollup -c ./rollup.config.js'
-  }
-
-  if (templateConfig.lint) {
-    config.scripts.prepare = 'husky install'
-  }
-
-  if (templateConfig.lint?.includes('commitlint')) {
-    config.scripts.commit = 'npx git-cz'
-  }
-
-  if (templateConfig.test) {
-    config.scripts.test = 'npx jest'
-  }
-
-  if (templateConfig.test && templateConfig.e2e) {
-    config.scripts.e2e = 'npx cypress open'
-  }
+export default function (name: string, templateConfig: TemplateConfigOptions, { dependencies, devDependencies }: ProjectStruct) {
+  const { lint = [], lib, test, e2e } = templateConfig
+  const defaultOptions = { name, version: '1.0.0', description: '', dependencies, devDependencies }
 
   return {
-    files: [['package.json', stringify(config)]]
+    files: [
+      [
+        'package.json',
+        stringify(
+          Object.assign({}, defaultOptions, {
+            scripts: {
+              test: test ? 'npx jest' : undefined,
+              e2e: test && e2e ? 'npx cypress open' : undefined,
+              prepare: !isEmpty(lint) ? 'husky install' : undefined,
+              build: lib ? 'npx rollup -c ./rollup.config.js' : undefined,
+              commit: lint.includes('commitlint') ? 'npx git-cz' : undefined
+            }
+          })
+        )
+      ]
+    ]
   }
 }
