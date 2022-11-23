@@ -1,4 +1,3 @@
-import ignore from './ignore'
 import bundler from './bundler'
 import { basename } from 'path'
 import * as parser from './parser'
@@ -39,13 +38,13 @@ function parseConfig(struct: Required<ProjectStruct>, config: TemplateConfigOpti
   const { dirs = [], files = [], lint = [] } = config
 
   struct = merge(struct, { files })
-  struct = merge(struct, ignore('git'))
   struct = merge(struct, bundler(config))
   struct = merge(struct, { dirs, files: [] })
   struct = merge(struct, parser.tsConfig(config))
   struct = merge(struct, parser.e2eConfig(config))
   struct = merge(struct, parser.testConfig(config))
   struct = merge(struct, parser.vsCodeConfig(config))
+  struct = merge(struct, parser.ignoreConfig(config))
   lint.forEach((rule) => (struct = merge(struct, parser.lintConfig(rule, config))))
 
   struct = mergeLintstagedConfig(struct)

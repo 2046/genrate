@@ -6,6 +6,6 @@ import test from './test'
 import babel from './babel'
 import husky from './husky'
 import rollup from './rollup'
-import gitignore from './gitignore'
+import * as ignore from './ignore'
 
-export default { ts, pkg, e2e, test, babel, rollup, lint, husky, gitignore }
+export default { ts, pkg, e2e, test, babel, rollup, lint, husky, ignore }
