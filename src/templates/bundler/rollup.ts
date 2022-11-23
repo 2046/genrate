@@ -1,4 +1,4 @@
-const tsTemplate = `const { defineConfig } = require('rollup')
+const ts = `const { defineConfig } = require('rollup')
 const json = require('@rollup/plugin-json')
 const clean = require('rollup-plugin-delete')
 const babel = require('@rollup/plugin-babel')
@@ -32,7 +32,7 @@ module.exports = defineConfig({
   ]
 })`
 
-const jsTemplate = `const { defineConfig } = require('rollup')
+const js = `const { defineConfig } = require('rollup')
 const json = require('@rollup/plugin-json')
 const clean = require('rollup-plugin-delete')
 const babel = require('@rollup/plugin-babel')
@@ -60,4 +60,4 @@ module.exports = defineConfig({
   ]
 })`
 
-export default { jsTemplate, tsTemplate }
+export default { ts, js }

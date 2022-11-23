@@ -1,6 +1,6 @@
-import { stringify } from '../utils'
-import { RequiredByKeys } from '../../types'
+import { stringify } from '../../utils'
 import { TSConfigJSON } from 'types-tsconfig'
+import { RequiredByKeys } from '../../../types'
 
 const defaultOptions: RequiredByKeys<TSConfigJSON, 'compilerOptions' | 'include'> = {
   compilerOptions: {
