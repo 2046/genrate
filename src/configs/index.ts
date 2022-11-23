@@ -1,4 +1,3 @@
-import prompts from 'prompts'
 import ignore from './ignore'
 import bundler from './bundler'
 import { basename } from 'path'
@@ -14,7 +13,7 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
   let struct: Required<ProjectStruct> = defaultStruct()
 
   if (typeof config == 'function') {
-    config = await config(prompts)
+    config = await config((await import('prompts')).default)
   }
 
   if (preprepare) {
