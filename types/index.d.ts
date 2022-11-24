@@ -2,9 +2,6 @@ import type prompts from 'prompts'
 import type { JSONObject } from 'types-json'
 
 export type TemplateConfigPlugin = (struct: ProjectStruct, config: TemplateConfigOptions, dest: string) => Promise<ProjectStruct | void>
-export type TS_TEMPLATE_TYPE = 'web' | 'webpack' | 'nodepack'
-export type LINT_RULE = 'stylelint' | 'eslint' | 'commitlint'
-export type LINT_STAGE_TYPE = 'prettier' | 'eslint'
 
 export interface TemplateConfig {
   preprepare?: TemplateConfigPlugin
@@ -17,8 +14,8 @@ export interface TemplateConfigOptions {
   lib?: boolean
   dirs?: Array<string>
   files?: Array<Array<string>>
-  framework?: 'web' | 'vue' | 'react' | 'electron' | 'nest'
-  lint?: Array<LINT_RULE>
+  framework?: 'vanilla' | 'vue' | 'react' | 'electron' | 'nest'
+  lint?: Array<'stylelint' | 'eslint' | 'commitlint'>
   vscode?: Array<string>
   test?: boolean
   e2e?: boolean
