@@ -21,4 +21,7 @@ babel.config.json
 /test
 /coverage
 jest.config.json
+
+# -- ts config --
+tsconfig.json
 `

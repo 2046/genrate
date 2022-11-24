@@ -10,7 +10,8 @@ export default function (templateConfig: TemplateConfigOptions) {
     rules: {
       'no-case-declarations': 'off'
     },
-    env: getEnv(templateConfig)
+    env: getEnv(templateConfig),
+    ignorePatterns: ['/*.js']
   }
 
   if (templateConfig.lint?.includes('stylelint')) {
@@ -36,8 +37,16 @@ export default function (templateConfig: TemplateConfigOptions) {
     config.parserOptions = { ecmaVersion: 'latest', sourceType: 'module' }
   }
 
+  if (templateConfig.test) {
+    config.ignorePatterns = [...(<Array<string>>config.ignorePatterns), '**/test/**']
+  }
+
+  if (templateConfig.lib) {
+    config.ignorePatterns = [...(<Array<string>>config.ignorePatterns), '**/types/**']
+  }
+
   if (templateConfig.test && templateConfig.e2e) {
-    config.ignorePatterns = ['cypress.config.js', '**/cypress/**']
+    config.ignorePatterns = [...(<Array<string>>config.ignorePatterns), 'cypress.config.js', '**/cypress/**']
   }
 
   return stringify(config)
