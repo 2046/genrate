@@ -1,6 +1,6 @@
 import { stringify } from '../../utils'
 
-export default stringify({
+export default `module.exports = ${stringify({
   types: [
     { value: 'feat', name: 'feat:     A new feature' },
     { value: 'fix', name: 'fix:      A bug fix' },
@@ -31,4 +31,4 @@ export default stringify({
   },
   skipQuestions: ['scope', 'body', 'footer'],
   subjectLimit: 100
-})
+})}`
