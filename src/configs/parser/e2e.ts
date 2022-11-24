@@ -2,7 +2,7 @@ import tpl from '../../templates'
 import { ProjectStruct, TemplateConfigOptions } from '../../../types'
 
 export default function ({ test, e2e }: TemplateConfigOptions): ProjectStruct {
-  if (!test && !e2e) {
+  if (!test || !e2e) {
     return { files: [] }
   }
 
