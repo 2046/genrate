@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import { stringify } from '../../utils'
 import { TSConfigJSON } from 'types-tsconfig'
 import { RequiredByKeys } from '../../../types'
@@ -21,11 +22,11 @@ const defaultOptions: RequiredByKeys<TSConfigJSON, 'compilerOptions' | 'include'
 
 export default {
   node: stringify(defaultOptions),
-  web: stringify(Object.assign({}, defaultOptions, { compilerOptions: { lib: ['ESNext', 'DOM'] } })),
+  vanilla: stringify(merge({}, defaultOptions, { compilerOptions: { lib: ['ESNext', 'DOM'] } })),
   lib: {
-    node: stringify(Object.assign({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types' } })),
-    web: stringify(
-      Object.assign({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types', lib: ['ESNext', 'DOM'] } })
+    node: stringify(merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types' } })),
+    vanilla: stringify(
+      merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types', lib: ['ESNext', 'DOM'] } })
     )
   }
 }

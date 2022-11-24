@@ -7,7 +7,7 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   let files: Array<Array<string>> = []
   const { lib, ts, framework } = templateConfig
 
-  if (lib && (framework === 'web' || !framework)) {
+  if (lib && (framework === 'vanilla' || !framework)) {
     files = [
       ['babel.config.json', tpl.bundler.babel],
       ['rollup.config.js', ts ? tpl.bundler.rollup.ts : tpl.bundler.rollup.js]

@@ -13,11 +13,11 @@ export default function ({ ts, lib, framework }: TemplateConfigOptions): Project
   }
 
   if (framework) {
-    files = [['tsconfig.json', tpl.ts.web]]
+    files = [['tsconfig.json', tpl.ts.vanilla]]
   }
 
   if (lib && framework) {
-    files = [['tsconfig.json', tpl.ts.lib.web]]
+    files = [['tsconfig.json', tpl.ts.lib.vanilla]]
   }
 
   return {
