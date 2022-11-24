@@ -4,10 +4,11 @@ import { TemplateConfigOptions, ProjectStruct } from '../../../types'
 export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   let dependencies = {}
   let devDependencies = {}
+  const { ts } = templateConfig
   let files: Array<Array<string>> = []
-  const { lib, ts, framework } = templateConfig
+  const bundlerType = getBundlerType(templateConfig)
 
-  if (lib && (framework === 'vanilla' || !framework)) {
+  if (bundlerType === 'rollup') {
     files = [
       ['babel.config.json', tpl.bundler.babel],
       ['rollup.config.js', ts ? tpl.bundler.rollup.ts : tpl.bundler.rollup.js]
@@ -43,5 +44,24 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
     files,
     dependencies,
     devDependencies
+  }
+}
+
+export function getBundlerType({ framework, lib }: TemplateConfigOptions) {
+  if (framework) {
+    switch (framework) {
+      case 'vanilla':
+        return lib ? 'rollup' : 'gulp'
+      case 'vue':
+        return 'vite'
+      case 'react':
+        return lib ? 'rollup' : 'webpack'
+      case 'electron':
+        return lib ? 'rollup' : 'electron-builder'
+      case 'nest':
+        return lib ? 'rollup' : 'nest'
+    }
+  } else {
+    return lib ? 'rollup' : ''
   }
 }

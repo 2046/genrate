@@ -22,11 +22,9 @@ const defaultOptions: RequiredByKeys<TSConfigJSON, 'compilerOptions' | 'include'
 
 export default {
   node: stringify(defaultOptions),
-  vanilla: stringify(merge({}, defaultOptions, { compilerOptions: { lib: ['ESNext', 'DOM'] } })),
+  web: stringify(merge({}, defaultOptions, { compilerOptions: { lib: ['ESNext', 'DOM'] } })),
   lib: {
     node: stringify(merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types' } })),
-    vanilla: stringify(
-      merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types', lib: ['ESNext', 'DOM'] } })
-    )
+    web: stringify(merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types', lib: ['ESNext', 'DOM'] } }))
   }
 }
