@@ -11,7 +11,7 @@ export default function (templateConfig: TemplateConfigOptions) {
       'no-case-declarations': 'off'
     },
     env: getEnv(templateConfig),
-    ignorePatterns: ['/*.js']
+    ignorePatterns: getIgnorePatterns(templateConfig)
   }
 
   if (templateConfig.lint?.includes('stylelint')) {
@@ -35,18 +35,6 @@ export default function (templateConfig: TemplateConfigOptions) {
     ]
   } else {
     config.parserOptions = { ecmaVersion: 'latest', sourceType: 'module' }
-  }
-
-  if (templateConfig.test) {
-    config.ignorePatterns = [...(<Array<string>>config.ignorePatterns), '**/test/**']
-  }
-
-  if (templateConfig.lib) {
-    config.ignorePatterns = [...(<Array<string>>config.ignorePatterns), '**/types/**']
-  }
-
-  if (templateConfig.test && templateConfig.e2e) {
-    config.ignorePatterns = [...(<Array<string>>config.ignorePatterns), 'cypress.config.js', '**/cypress/**']
   }
 
   return stringify(config)
@@ -74,4 +62,22 @@ function getEnv(templateConfig: TemplateConfigOptions) {
   }
 
   return env
+}
+
+function getIgnorePatterns({ lib, test, e2e }: TemplateConfigOptions) {
+  let ignorePatterns = ['/*.js', '**/dist/**']
+
+  if (test) {
+    ignorePatterns = [...ignorePatterns, '**/test/**']
+  }
+
+  if (lib) {
+    ignorePatterns = [...ignorePatterns, '**/types/**']
+  }
+
+  if (test && e2e) {
+    ignorePatterns = [...ignorePatterns, 'cypress.config.js', '**/cypress/**']
+  }
+
+  return ignorePatterns
 }
