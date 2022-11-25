@@ -17,7 +17,7 @@ module.exports = defineConfig({
   }, {
     format: 'es',
     sourcemap: true,
-    file: './dist/index.esm.js'
+    file: './dist/index.esm.mjs'
   }],
   plugins: [
     clean({ targets: ['dist/*', 'types/*'] }),
@@ -53,7 +53,7 @@ module.exports = defineConfig({
   }, {
     format: 'es',
     sourcemap: true,
-    file: './dist/index.esm.js'
+    file: './dist/index.esm.mjs'
   }],
   plugins: [
     clean({ targets: ['dist/*'] }),
