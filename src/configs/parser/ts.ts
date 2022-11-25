@@ -13,11 +13,11 @@ export default function ({ ts, lib, framework }: TemplateConfigOptions): Project
   }
 
   if (framework) {
-    files = [['tsconfig.json', tpl.ts.web]]
+    files = [['tsconfig.json', ['nest'].includes(framework) ? tpl.ts.node : tpl.ts.web]]
   }
 
   if (lib && framework) {
-    files = [['tsconfig.json', tpl.ts.lib.web]]
+    files = [['tsconfig.json', ['nest'].includes(framework) ? tpl.ts.lib.node : tpl.ts.lib.web]]
   }
 
   return {

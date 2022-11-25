@@ -5,7 +5,7 @@ import { ProjectStruct, TemplateConfigOptions } from '../../../types'
 
 export default function (name: string, templateConfig: TemplateConfigOptions, { dependencies, devDependencies }: ProjectStruct) {
   const bundlerType = getBundlerType(templateConfig)
-  const { lint = [], test, e2e, lib } = templateConfig
+  const { lint = [], test, e2e, lib, ts } = templateConfig
   const defaultOptions = { name, version: '1.0.0', description: '', dependencies, devDependencies }
 
   return {
@@ -25,7 +25,7 @@ export default function (name: string, templateConfig: TemplateConfigOptions, { 
                 ...getBuildCommands(bundlerType)
               }
             },
-            getExports(bundlerType, lib)
+            getExports(bundlerType, lib, ts)
           )
         )
       ]
@@ -33,7 +33,7 @@ export default function (name: string, templateConfig: TemplateConfigOptions, { 
   }
 }
 
-function getExports(bundlerType: string, lib?: boolean) {
+function getExports(bundlerType: string, lib?: boolean, ts?: boolean) {
   if (!lib) {
     return {}
   }
@@ -41,7 +41,7 @@ function getExports(bundlerType: string, lib?: boolean) {
   if (bundlerType === 'rollup') {
     return {
       main: './dist/index.cjs.js',
-      types: './types/index.d.ts',
+      types: ts ? './types/index.d.ts' : undefined,
       exports: {
         '.': {
           import: './dist/index.esm.mjs',
