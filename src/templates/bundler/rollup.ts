@@ -10,11 +10,15 @@ const typescript = require('rollup-plugin-typescript2')
 
 module.exports = defineConfig({
   input: 'src/index.ts',
-  output: {
+  output: [{
     format: 'cjs',
     sourcemap: true,
-    file: './dist/index.js'
-  },
+    file: './dist/index.cjs.js'
+  }, {
+    format: 'es',
+    sourcemap: true,
+    file: './dist/index.esm.js'
+  }],
   plugins: [
     clean({ targets: ['dist/*', 'types/*'] }),
     externals({ deps: true }),
@@ -42,11 +46,15 @@ const resolve = require('@rollup/plugin-node-resolve')
 
 module.exports = defineConfig({
   input: 'src/index.js',
-  output: {
+  output: [{
     format: 'cjs',
     sourcemap: true,
-    file: './dist/index.js'
-  },
+    file: './dist/index.cjs.js'
+  }, {
+    format: 'es',
+    sourcemap: true,
+    file: './dist/index.esm.js'
+  }],
   plugins: [
     clean({ targets: ['dist/*'] }),
     externals({ deps: true }),
