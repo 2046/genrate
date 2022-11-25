@@ -38,6 +38,20 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
         'rollup-plugin-typescript2': '0.34.1'
       })
     }
+  } else if (bundlerType === 'babel') {
+    files = [['babel.config.json', tpl.bundler.babel]]
+
+    dependencies = Object.assign({}, dependencies, {
+      '@babel/runtime': '7.20.1',
+      '@babel/runtime-corejs3': '7.20.1'
+    })
+
+    devDependencies = Object.assign({}, devDependencies, {
+      '@babel/cli': '7.19.3',
+      '@babel/core': '7.20.2',
+      '@babel/preset-env': '7.20.2',
+      '@babel/plugin-transform-runtime': '7.19.6'
+    })
   }
 
   return {
@@ -47,7 +61,7 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   }
 }
 
-export function getBundlerType({ framework, lib }: TemplateConfigOptions) {
+export function getBundlerType({ framework, lib, ts }: TemplateConfigOptions) {
   if (framework) {
     switch (framework) {
       case 'vanilla':
@@ -62,6 +76,6 @@ export function getBundlerType({ framework, lib }: TemplateConfigOptions) {
         return lib ? 'rollup' : 'nest'
     }
   } else {
-    return lib ? 'rollup' : ''
+    return lib ? 'rollup' : ts ? 'tsc' : 'babel'
   }
 }

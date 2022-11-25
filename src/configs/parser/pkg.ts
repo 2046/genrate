@@ -52,10 +52,18 @@ function getExports(bundlerType: string, lib?: boolean) {
   }
 }
 
-function getBuildCommands(bundlerType: string) {
+function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>) {
   if (bundlerType === 'rollup') {
     return {
       build: 'npx rollup -c ./rollup.config.js'
+    }
+  } else if (bundlerType === 'tsc') {
+    return {
+      build: 'npx tsc --outDir ./dist'
+    }
+  } else if (bundlerType === 'babel') {
+    return {
+      build: 'npx babel src -d dist'
     }
   } else {
     return {}
