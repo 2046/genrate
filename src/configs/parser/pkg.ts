@@ -65,6 +65,11 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>) {
     return {
       build: 'npx babel src -d dist'
     }
+  } else if (bundlerType === 'gulp') {
+    return {
+      dev: 'cross-env NODE_ENV=development npx gulp dev',
+      build: 'cross-env NODE_ENV=production npx gulp build'
+    }
   } else {
     return {}
   }

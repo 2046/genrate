@@ -1,14 +1,7 @@
 import { stringify } from '../../utils'
 
 export default stringify({
-  presets: [
-    [
-      '@babel/preset-env',
-      {
-        targets: '> 1%, last 2 versions, not ie <= 8, android >= 4, ios >= 8, not dead'
-      }
-    ]
-  ],
+  presets: ['@babel/preset-env'],
   plugins: [
     [
       '@babel/plugin-transform-runtime',
