@@ -60,8 +60,9 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
     files = [
       ['.env.production', tpl.etc.env],
       ['.env.development', tpl.etc.env],
-      ['gulpfile.js', tpl.bundler.gulp],
-      ['.browserslistrc', tpl.etc.browserslistrc]
+      ['babel.config.json', tpl.bundler.babel],
+      ['.browserslistrc', tpl.etc.browserslistrc],
+      ['gulpfile.js', ts ? tpl.bundler.gulp.ts : tpl.bundler.gulp.js]
     ]
 
     dependencies = Object.assign({}, dependencies, {
@@ -81,14 +82,23 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
       'gulp-babel': '8.0.0',
       'gulp-rename': '2.0.0',
       'gulp-uglify': '3.0.2',
+      '@babel/cli': '7.19.3',
+      '@babel/core': '7.20.2',
       'gulp-rev-all': '3.0.0',
       autoprefixer: '10.4.13',
       'gulp-postcss': '9.0.1',
       'browser-sync': '2.27.10',
       'gulp-clean-css': '4.3.0',
-      'gulp-typescript': '6.0.0-alpha.1',
-      'gulp-rev-delete-original': '0.2.3'
+      '@babel/preset-env': '7.20.2',
+      'gulp-rev-delete-original': '0.2.3',
+      '@babel/plugin-transform-runtime': '7.19.6'
     })
+
+    if (ts) {
+      devDependencies = Object.assign({}, devDependencies, {
+        'gulp-typescript': '6.0.0-alpha.1'
+      })
+    }
   }
 
   return {
