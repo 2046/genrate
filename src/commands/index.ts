@@ -2,6 +2,7 @@ import ls from './ls'
 import rm from './rm'
 import use from './use'
 import init from './init'
+import update from './update'
 import outdated from './outdated'
 
 export default [
@@ -29,5 +30,10 @@ export default [
     command: 'rm [template]',
     description: 'remove a template file',
     action: rm
+  },
+  {
+    command: 'update [template]',
+    description: 'update a template file',
+    action: update
   }
 ]
