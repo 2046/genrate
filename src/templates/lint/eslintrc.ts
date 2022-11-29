@@ -41,12 +41,8 @@ export default function (templateConfig: TemplateConfigOptions) {
 }
 
 function getEnv(templateConfig: TemplateConfigOptions) {
-  const env: JSONObject = {}
-  const { lib, framework = '', test, ts } = templateConfig
-
-  if (lib) {
-    env.node = true
-  }
+  const env: JSONObject = { node: true }
+  const { framework = '', test, ts } = templateConfig
 
   if (framework) {
     env.node = true
