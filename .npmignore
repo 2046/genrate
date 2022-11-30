@@ -1,0 +1,18 @@
+# -- Husky config --
+.husky
+
+# -- commit spec config --
+cz.config.js
+
+# -- Project License --
+LICENSE
+
+# -- test cases --
+test/
+
+# -- Jest --
+/coverage
+
+# -- Typescript --
+tsconfig.json
+tsconfig.eslint.json
