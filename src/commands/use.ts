@@ -1,11 +1,9 @@
+import { join } from 'path'
 import npm from '../utils/npm'
 import npa from 'npm-package-arg'
 import { parse } from '../configs'
-import { join, dirname } from 'path'
-import { exec } from '../utils/shell'
-import { ProjectStruct } from '../../types'
+import { isDirectory, createProject } from '../utils/fs'
 import { TMP_PATH, TEMPLATE_PATH } from '../utils/constants'
-import { isDirectory, createDirSync, writeFileSync } from '../utils/fs'
 import { download, unzip, loadTemplateConfig, toAbsolutePath, output } from '../utils'
 
 export default async function use(template = '') {
@@ -48,25 +46,4 @@ function parsePackageName(packageName: string) {
   const { name, rawSpec } = <{ name: string; rawSpec: string }>npa(packageName)
 
   return rawSpec === '*' ? { name, version: 'latest' } : { name, version: rawSpec }
-}
-
-function createProject(struct: Required<ProjectStruct>, dest: string) {
-  const { files, dirs } = struct
-
-  for (const dir of dirs) {
-    createDirSync(join(dest, dir))
-  }
-
-  for (const [fileName, content] of files) {
-    const filePath = join(dest, fileName)
-    const dirPath = dirname(filePath)
-
-    if (!isDirectory(dirPath)) {
-      createDirSync(dirPath)
-    }
-
-    writeFileSync(filePath, content)
-  }
-
-  exec('git init', { cwd: dest })
 }
