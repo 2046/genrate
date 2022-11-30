@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import npm from './utils/npm'
 import commands from './commands'
 import { program } from 'commander'
