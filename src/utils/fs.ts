@@ -42,6 +42,16 @@ export function writeFileSync(path: string, data: string) {
   fs.writeFileSync(path, data, { encoding: 'utf8', mode: 0o0755 })
 }
 
+export async function isEmptyDirectory(path: string) {
+  if (isDirectory(path)) {
+    const dirs = await fs.readdir(path)
+
+    return !dirs.length
+  } else {
+    return true
+  }
+}
+
 export function createProject(struct: Required<ProjectStruct>, dest: string, vcs = true) {
   const { files, dirs } = struct
 

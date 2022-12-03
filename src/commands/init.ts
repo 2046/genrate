@@ -2,10 +2,10 @@ import chalk from 'chalk'
 import { parse } from '../configs'
 import { capitalize } from 'lodash'
 import { JSONObject } from 'types-json'
-import { createProject } from '../utils/fs'
 import prompts, { PromptObject } from 'prompts'
 import { toAbsolutePath, output } from '../utils'
 import { TemplateConfigOptions } from '../../types'
+import { createProject, isEmptyDirectory, rmDirSync } from '../utils/fs'
 
 export default async function init() {
   const questions: Array<PromptObject> = [
@@ -48,6 +48,24 @@ export default async function init() {
   ]
 
   const dest = toAbsolutePath(process.argv[3] || process.cwd())
+
+  if (!(await isEmptyDirectory(dest))) {
+    const answers = await prompts([
+      {
+        initial: true,
+        type: 'confirm',
+        name: 'overwrite',
+        message: 'Current directory is not empty. Remove existing files and continue?'
+      }
+    ])
+
+    if (!answers.overwrite) {
+      return
+    }
+
+    rmDirSync(dest)
+  }
+
   const templateConfig = getTemplateConfig(await prompts(questions))
 
   createProject(await parse({ config: templateConfig }, dest), dest)
