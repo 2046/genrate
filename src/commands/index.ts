@@ -13,7 +13,7 @@ export default [
   },
   {
     command: 'init',
-    description: 'create a template file',
+    description: 'initialize the project using the custom template',
     action: init
   },
   {

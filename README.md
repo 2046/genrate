@@ -45,11 +45,39 @@ The supported project type are:
 
 ## Commands
 
-| Command  | Parameter         | description                               | example                      |
-| -------- | ----------------- | ----------------------------------------- | ---------------------------- |
-| use      | \<Template Name\> | initialize the project using the template | gen use @tmplates/vanilla    |
-| init     | [directory-name]  | custom project template                   | gen init [directory-name]    |
-| ls       | /                 | list installed templates                  | gen ls                       |
-| outdated | /                 | check for outdated templates              | gen outdated                 |
-| rm       | \<Template Name\> | remove a template file                    | gen rm @tmplates/vanilla     |
-| update   | \<Template Name\> | update a template file                    | gen update @tmplates/vanilla |
+Below are the various genrate commands for manage locally template package.
+
+| Command  | Parameters                         | description                                      | example                                    |
+| -------- | ---------------------------------- | ------------------------------------------------ | ------------------------------------------ |
+| use      | \<Template Name\> [directory-name] | initialize the project using the template        | gen use @tmplates/vanilla [directory-name] |
+| init     | [directory-name]                   | initialize the project using the custom template | gen init [directory-name]                  |
+| ls       | /                                  | list installed templates                         | gen ls                                     |
+| outdated | /                                  | check for outdated templates                     | gen outdated                               |
+| rm       | \<Template Name\>                  | remove a template file                           | gen rm @tmplates/vanilla                   |
+| update   | \<Template Name\>                  | update a template file                           | gen update @tmplates/vanilla               |
+
+## Create Project Template
+
+Genrate supports custom template packages, just create a template package project as agreement and publish it to npm.
+
+A legal template package includes `README.md`, `package.json` and template entry file (etc: `index.js` `template.js`).
+
+The template entry file needs to be specified in the `package.json` file using the template field, below is the added tempalte field schema:
+
+```js
+"template": {
+  "main": "index.js", // required
+  "preprepare": "preprepare.js", // not required
+  "postprepare": "postprepare.js" // not required
+}
+```
+
+- `mian` The main field specifies the template entry file. the file must export a JSON object or a function that returns JSON object.
+- `preprepare` It's a life cycle hook that is executed before parsing the main field, you can do something inside this hook and return a JSON object that matches the [ProjectStruct](https://github.com/2046/genrate/blob/main/types/index.d.ts#L34-L39) definition.
+- `postprepare` It's a life cycle hook that is executed after parsing the main field, you can do something inside this hook and return a JSON object that matches the [ProjectStruct](https://github.com/2046/genrate/blob/main/types/index.d.ts#L34-L39) definition.
+
+For more examples, you can refer to [Project Templates](https://github.com/2046/genrate#project-templates).
+
+## License
+
+[MIT](LICENSE).
