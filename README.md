@@ -72,7 +72,7 @@ The template entry file needs to be specified in the `package.json` file using t
 }
 ```
 
-- `mian` The main field specifies the template entry file. the file must export a JSON object or a function that returns JSON object and the JSON object must satisfy the [template config](#about-template-config) definition.
+- `mian` The main field specifies the template entry file. the file must export a JSON object or a function that returns JSON object and the JSON object must satisfy the [template config](#about-template-config-fields) definition.
 - `preprepare` It's a life cycle hook that is executed before parsing the main field, you can do something inside this hook and return a JSON object that matches the [ProjectStruct](https://github.com/2046/genrate/blob/main/types/index.d.ts#L34-L39) definition.
 - `postprepare` It's a life cycle hook that is executed after parsing the main field, you can do something inside this hook and return a JSON object that matches the [ProjectStruct](https://github.com/2046/genrate/blob/main/types/index.d.ts#L34-L39) definition.
 
