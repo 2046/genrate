@@ -72,11 +72,27 @@ The template entry file needs to be specified in the `package.json` file using t
 }
 ```
 
-- `mian` The main field specifies the template entry file. the file must export a JSON object or a function that returns JSON object.
+- `mian` The main field specifies the template entry file. the file must export a JSON object or a function that returns JSON object and the JSON object must satisfy the [template config](#about-template-config) definition.
 - `preprepare` It's a life cycle hook that is executed before parsing the main field, you can do something inside this hook and return a JSON object that matches the [ProjectStruct](https://github.com/2046/genrate/blob/main/types/index.d.ts#L34-L39) definition.
 - `postprepare` It's a life cycle hook that is executed after parsing the main field, you can do something inside this hook and return a JSON object that matches the [ProjectStruct](https://github.com/2046/genrate/blob/main/types/index.d.ts#L34-L39) definition.
 
-For more examples, you can refer to [Project Templates](https://github.com/2046/genrate#project-templates).
+For more examples, you can refer to [Project Templates](#project-templates).
+
+#### About Template Config Fields
+
+```js
+{
+  ts?: boolean // Whether to use ts language
+  lib?: boolean // Whether to create a library project
+  dirs?: Array<string> // create some folders, etc: ['src', 'tests', 'plugins']
+  files?: Array<Array<string>> // create some files, etc: [['src/index.ts', ''], ['test/index.spce.js', '']]
+  framework?: 'vanilla' | 'vue' | 'react' | 'electron' | 'nest' // Use a web framework, vanilla indicates that no framework is used
+  lint?: Array<'stylelint' | 'eslint' | 'commitlint'> // Use lint tools, support stylelint, eslint and commitlint, Where stylelint used to unify code styles
+  vscode?: Array<string> // Recommended of VScode plugins, need to fill in plugin ID, etc: ['vue.volar', 'mikestead.dotenv']
+  test?: boolean // Whether to use unit tests
+  e2e?: boolean // Whether to use End-to-End test solution
+}
+```
 
 ## License
 
