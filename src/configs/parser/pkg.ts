@@ -22,7 +22,7 @@ export default function (name: string, templateConfig: TemplateConfigOptions, { 
                 e2e: test && e2e ? 'npx cypress open' : undefined,
                 prepare: !isEmpty(lint) ? 'husky install' : undefined,
                 commit: lint.includes('commitlint') ? 'npx git-cz' : undefined,
-                ...getBuildCommands(bundlerType)
+                ...getBuildCommands(bundlerType, ts)
               }
             },
             getExports(bundlerType, lib, ts)
@@ -52,7 +52,7 @@ function getExports(bundlerType: string, lib?: boolean, ts?: boolean) {
   }
 }
 
-function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>) {
+function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: boolean) {
   if (bundlerType === 'rollup') {
     return {
       build: 'npx rollup -c ./rollup.config.js'
@@ -69,6 +69,12 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>) {
     return {
       dev: 'cross-env NODE_ENV=development npx gulp dev',
       build: 'cross-env NODE_ENV=production npx gulp build'
+    }
+  } else if (bundlerType === 'vite') {
+    return {
+      dev: 'vite --host',
+      build: 'vite build',
+      preview: 'vite preview'
     }
   } else {
     return {}

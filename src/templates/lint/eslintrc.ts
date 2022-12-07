@@ -37,7 +37,11 @@ export default function (templateConfig: TemplateConfigOptions) {
     config.parserOptions = { ecmaVersion: 'latest', sourceType: 'module' }
   }
 
-  return stringify(config)
+  if (templateConfig.framework === 'vue') {
+    config.extends = ['plugin:vue/vue3-essential', ...(<Array<string>>config.extends)]
+  }
+
+  return `module.exports = ${stringify(config)}`
 }
 
 function getEnv(templateConfig: TemplateConfigOptions) {

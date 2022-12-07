@@ -13,11 +13,23 @@ export default function ({ ts, lib, framework }: TemplateConfigOptions): Project
   }
 
   if (framework) {
-    files = [['tsconfig.json', ['nest'].includes(framework) ? tpl.ts.node : tpl.ts.web]]
+    files = [['tsconfig.json', tpl.ts.web]]
+
+    if (['vue'].includes(framework)) {
+      files = [['tsconfig.json', tpl.ts.vue]]
+    }
+
+    if (['nest'].includes(framework)) {
+      files = [['tsconfig.json', tpl.ts.node]]
+    }
   }
 
   if (lib && framework) {
-    files = [['tsconfig.json', ['nest'].includes(framework) ? tpl.ts.lib.node : tpl.ts.lib.web]]
+    files = [['tsconfig.json', tpl.ts.lib.web]]
+
+    if (['nest'].includes(framework)) {
+      files = [['tsconfig.json', tpl.ts.lib.node]]
+    }
   }
 
   return {

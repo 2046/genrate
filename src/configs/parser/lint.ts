@@ -76,9 +76,15 @@ export default function (rule: string, templateConfig: TemplateConfigOptions): P
       })
     }
 
+    if (templateConfig.framework === 'vue') {
+      devDependencies = Object.assign({}, devDependencies, {
+        'eslint-plugin-vue': '9.8.0'
+      })
+    }
+
     return {
       devDependencies,
-      files: [['.eslintrc', tpl.lint.eslint(templateConfig)]]
+      files: [['.eslintrc.js', tpl.lint.eslint(templateConfig)]]
     }
   }
 

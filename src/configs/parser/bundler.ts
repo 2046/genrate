@@ -99,6 +99,21 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
         'gulp-typescript': '6.0.0-alpha.1'
       })
     }
+  } else if (bundlerType === 'vite') {
+    files = [[ts ? 'vite.config.ts' : 'vite.config.js', tpl.bundler.vite]]
+
+    dependencies = Object.assign({}, dependencies, {
+      vue: '3.2.45',
+      'vue-router': '4.1.6'
+    })
+
+    devDependencies = Object.assign({}, devDependencies, {
+      vite: '3.2.5',
+      '@vitejs/plugin-vue': '3.2.0',
+      '@vitejs/plugin-vue-jsx': '2.1.1',
+      'vue-tsc': ts ? '1.0.11' : undefined,
+      '@types/node': ts ? '18.11.11' : undefined
+    })
   }
 
   return {

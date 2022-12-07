@@ -2,8 +2,16 @@ import { stringify } from '../../utils'
 import { TemplateConfigOptions } from '../../../types'
 
 export default function (type: string, templateConfig: TemplateConfigOptions) {
-  const { ts } = templateConfig
-  const extName = ts ? ['js', 'jsx', 'ts', 'tsx'] : ['js', 'jsx']
+  const { ts, framework = '' } = templateConfig
+  let extName = ['md', 'json', 'yml', 'js', 'jsx']
+
+  if (ts) {
+    extName = [...extName, 'ts', 'tsx']
+  }
+
+  if (['vue'].includes(framework)) {
+    extName = [...extName, 'vue']
+  }
 
   if (type === 'prettier') {
     return stringify({ [`*.{${extName.join(',')}}`]: 'prettier --write' })
