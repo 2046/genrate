@@ -1,15 +1,29 @@
-export default `/// <reference types="vite/client" />
+import { JSONObject } from 'types-json'
 
-declare module '*.vue' {
+export default function ({ component, metaEnv }: JSONObject) {
+  let str = `/// <reference types="vite/client" />
+
+`
+
+  if (component) {
+    str += `declare module '*.vue' {
   import type { DefineComponent } from 'vue'
   const component: DefineComponent<{}, {}, any>
   export default component
 }
 
-interface ImportMetaEnv {
+`
+  }
+
+  if (metaEnv) {
+    str += `interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string
 }
-
+    
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }`
+  }
+
+  return str
+}

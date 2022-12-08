@@ -22,7 +22,7 @@ export default function (name: string, templateConfig: TemplateConfigOptions, { 
                 e2e: test && e2e ? 'npx cypress open' : undefined,
                 prepare: !isEmpty(lint) ? 'husky install' : undefined,
                 commit: lint.includes('commitlint') ? 'npx git-cz' : undefined,
-                ...getBuildCommands(bundlerType, ts)
+                ...getBuildCommands(bundlerType, ts, lib)
               }
             },
             getExports(bundlerType, lib, ts)
@@ -38,7 +38,7 @@ function getExports(bundlerType: string, lib?: boolean, ts?: boolean) {
     return {}
   }
 
-  if (bundlerType === 'rollup') {
+  if (['rollup', 'vite'].includes(bundlerType)) {
     return {
       main: './dist/index.cjs.js',
       types: ts ? './types/index.d.ts' : undefined,
@@ -52,7 +52,7 @@ function getExports(bundlerType: string, lib?: boolean, ts?: boolean) {
   }
 }
 
-function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: boolean) {
+function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: boolean, lib?: boolean) {
   if (bundlerType === 'rollup') {
     return {
       build: 'npx rollup -c ./rollup.config.js'
@@ -71,11 +71,17 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: b
       build: 'cross-env NODE_ENV=production npx gulp build'
     }
   } else if (bundlerType === 'vite') {
-    return {
-      dev: 'vite --host',
-      preview: 'vite preview',
-      build: ts ? 'vue-tsc --noEmit && vite build' : 'vite build'
-    }
+    return lib
+      ? {
+          dev: 'vite --host',
+          build: ts ? 'vite build && npm run build:types' : 'vite build',
+          'build:types': ts ? 'vue-tsc --project tsconfig.types.json --declaration --emitDeclarationOnly --outDir types' : undefined
+        }
+      : {
+          dev: 'vite --host',
+          preview: 'vite preview --host',
+          build: ts ? 'vue-tsc --noEmit && vite build' : 'vite build'
+        }
   } else {
     return {}
   }

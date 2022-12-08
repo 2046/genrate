@@ -11,7 +11,7 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   } else if (bundlerType === 'gulp') {
     return getGulpBundleConfig(templateConfig.ts)
   } else if (bundlerType === 'vite') {
-    return getViteBundleConfig(templateConfig.ts)
+    return getViteBundleConfig(templateConfig)
   }
 
   return {
@@ -127,15 +127,22 @@ function getGulpBundleConfig(ts?: boolean) {
   }
 }
 
-function getViteBundleConfig(ts?: boolean) {
-  let files = [
-    ['.env.production', tpl.etc.env],
-    ['.env.development', tpl.etc.env],
-    [ts ? 'vite.config.ts' : 'vite.config.js', tpl.bundler.vite]
-  ]
+function getViteBundleConfig({ ts, lib }: TemplateConfigOptions) {
+  let files = lib
+    ? []
+    : [
+        ['.env.production', tpl.etc.env],
+        ['.env.development', tpl.etc.env]
+      ]
 
   if (ts) {
-    files = [...files, ['src/vite-env.d.ts', tpl.etc.viteEnv]]
+    files = [...files, ['vite.config.ts', lib ? tpl.bundler.vite.lib(true) : tpl.bundler.vite.app]]
+
+    files = lib
+      ? [...files, ['env.d.ts', tpl.etc.viteEnv({ component: true })]]
+      : [...files, ['env.d.ts', tpl.etc.viteEnv({ component: true, metaEnv: true })]]
+  } else {
+    files = [...files, ['vite.config.js', lib ? tpl.bundler.vite.lib(false) : tpl.bundler.vite.app]]
   }
 
   return {

@@ -3,6 +3,7 @@ import { JSONObject } from 'types-json'
 import { TemplateConfigOptions } from '../../../types'
 
 export default function (templateConfig: TemplateConfigOptions) {
+  const { ts, framework, lint = [] } = templateConfig
   const config: JSONObject = {
     root: true,
     plugins: [],
@@ -14,14 +15,14 @@ export default function (templateConfig: TemplateConfigOptions) {
     ignorePatterns: getIgnorePatterns(templateConfig)
   }
 
-  if (templateConfig.lint?.includes('stylelint')) {
+  if (lint.includes('stylelint')) {
     config.plugins = [...(<Array<string>>config.plugins), 'prettier']
     config.rules = Object.assign({}, config.rules, { 'prettier/prettier': 'error' })
     config.extends = [...(<Array<string>>config.extends), 'plugin:prettier/recommended']
   }
 
-  if (templateConfig.ts) {
-    if (templateConfig.framework === 'vue') {
+  if (ts) {
+    if (framework === 'vue') {
       config.plugins = [...(<Array<string>>config.plugins), '@typescript-eslint']
       config.extends = [...(<Array<string>>config.extends), 'plugin:@typescript-eslint/eslint-recommended']
       config.parserOptions = {
@@ -55,8 +56,17 @@ export default function (templateConfig: TemplateConfigOptions) {
     config.parserOptions = { ecmaVersion: 'latest', sourceType: 'module' }
   }
 
-  if (templateConfig.framework === 'vue') {
+  if (framework === 'vue') {
     config.extends = ['plugin:vue/vue3-essential', ...(<Array<string>>config.extends)]
+    config.overrides = [
+      {
+        files: ts ? ['*.ts', '*.tsx', '*.vue'] : ['*.vue'],
+        rules: {
+          'no-unused-vars': 'off',
+          '@typescript-eslint/no-unused-vars': ts ? 'warn' : undefined
+        }
+      }
+    ]
   }
 
   return `module.exports = ${stringify(config)}`.replace(/('|")(?=require.*?\()|(?<=require.*?\(.+?\))("|')/g, '')
