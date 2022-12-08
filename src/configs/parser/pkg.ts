@@ -18,11 +18,10 @@ export default function (name: string, templateConfig: TemplateConfigOptions, { 
             defaultOptions,
             {
               scripts: {
-                test: test ? 'npx jest' : undefined,
-                e2e: test && e2e ? 'npx cypress open' : undefined,
                 prepare: !isEmpty(lint) ? 'husky install' : undefined,
                 commit: lint.includes('commitlint') ? 'npx git-cz' : undefined,
-                ...getBuildCommands(bundlerType, ts, lib)
+                ...getBuildCommands(bundlerType, ts, lib),
+                ...getTestCommands(bundlerType, test, e2e)
               }
             },
             getExports(bundlerType, lib, ts)
@@ -84,5 +83,20 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: b
         }
   } else {
     return {}
+  }
+}
+
+function getTestCommands(bundlerType: ReturnType<typeof getBundlerType>, test?: boolean, e2e?: boolean) {
+  if (bundlerType === 'vite') {
+    return {
+      test: test ? 'vitest' : undefined,
+      e2e: test && e2e ? 'npx cypress open' : undefined,
+      'test:coverage': test ? 'vitest run --coverage' : undefined
+    }
+  } else {
+    return {
+      test: test ? 'npx jest' : undefined,
+      e2e: test && e2e ? 'npx cypress open' : undefined
+    }
   }
 }

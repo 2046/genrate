@@ -26,7 +26,7 @@ export default {
   web: stringify(merge({}, defaultOptions, { compilerOptions: { lib: ['ESNext', 'DOM'] } })),
   vue: stringify(
     merge({}, defaultOptions, {
-      include: ['src/**/*', 'env.d.ts', 'src/**/*.vue', 'vite.config.ts'],
+      include: ['src/**/*', 'env.d.ts', 'src/**/*.vue', 'vite.config.ts', 'test/**/*'],
       compilerOptions: {
         jsx: 'preserve',
         isolatedModules: true,
@@ -44,7 +44,7 @@ export default {
     web: stringify(merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types', lib: ['ESNext', 'DOM'] } })),
     vue: stringify(
       merge({}, defaultOptions, {
-        include: ['src/**/*', 'env.d.ts', 'src/**/*.vue', 'vite.config.ts'],
+        include: ['src/**/*', 'env.d.ts', 'src/**/*.vue', 'vite.config.ts', 'test/**/*'],
         compilerOptions: {
           jsx: 'preserve',
           isolatedModules: true,
