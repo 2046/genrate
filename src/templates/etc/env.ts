@@ -1,1 +1,1 @@
-export default 'APP_PUBLIC_PATH = ./'
+export default 'APP_PUBLIC_PATH = /'
