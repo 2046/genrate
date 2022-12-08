@@ -128,13 +128,18 @@ function getGulpBundleConfig(ts?: boolean) {
 }
 
 function getViteBundleConfig(ts?: boolean) {
+  let files = [
+    ['.env.production', tpl.etc.env],
+    ['.env.development', tpl.etc.env],
+    [ts ? 'vite.config.ts' : 'vite.config.js', tpl.bundler.vite]
+  ]
+
+  if (ts) {
+    files = [...files, ['src/vite-env.d.ts', tpl.etc.viteEnv]]
+  }
+
   return {
-    files: [
-      ['.env.production', tpl.etc.env],
-      ['.env.development', tpl.etc.env],
-      ['src/vite-env.d.ts', tpl.etc.viteEnv],
-      [ts ? 'vite.config.ts' : 'vite.config.js', tpl.bundler.vite]
-    ],
+    files,
     dirs: ['src'],
     dependencies: { vue: '3.2.45' },
     devDependencies: {
