@@ -21,18 +21,36 @@ export default function (templateConfig: TemplateConfigOptions) {
   }
 
   if (templateConfig.ts) {
-    config.parser = '@typescript-eslint/parser'
-    config.parserOptions = { project: './tsconfig.json' }
-    config.plugins = [...(<Array<string>>config.plugins), '@typescript-eslint']
-    config.rules = Object.assign({}, config.rules, {
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }]
-    })
-    config.extends = [
-      ...(<Array<string>>config.extends),
-      'plugin:@typescript-eslint/recommended',
-      'plugin:@typescript-eslint/recommended-requiring-type-checking'
-    ]
+    if (templateConfig.framework === 'vue') {
+      config.plugins = [...(<Array<string>>config.plugins), '@typescript-eslint']
+      config.extends = [...(<Array<string>>config.extends), 'plugin:@typescript-eslint/eslint-recommended']
+      config.parserOptions = {
+        ecmaVersion: 'latest',
+        extraFileExtensions: ['.vue'],
+        ecmaFeatures: {
+          jsx: true
+        },
+        parser: {
+          js: 'espree',
+          jsx: 'espree',
+          ts: `require.resolve('@typescript-eslint/parser')`,
+          tsx: `require.resolve('@typescript-eslint/parser')`
+        }
+      }
+    } else {
+      config.parser = '@typescript-eslint/parser'
+      config.parserOptions = { project: './tsconfig.json' }
+      config.plugins = [...(<Array<string>>config.plugins), '@typescript-eslint']
+      config.rules = Object.assign({}, config.rules, {
+        '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-floating-promises': ['error', { ignoreIIFE: true }]
+      })
+      config.extends = [
+        ...(<Array<string>>config.extends),
+        'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking'
+      ]
+    }
   } else {
     config.parserOptions = { ecmaVersion: 'latest', sourceType: 'module' }
   }
@@ -41,7 +59,7 @@ export default function (templateConfig: TemplateConfigOptions) {
     config.extends = ['plugin:vue/vue3-essential', ...(<Array<string>>config.extends)]
   }
 
-  return `module.exports = ${stringify(config)}`
+  return `module.exports = ${stringify(config)}`.replace(/('|")(?=require.*?\()|(?<=require.*?\(.+?\))("|')/g, '')
 }
 
 function getEnv(templateConfig: TemplateConfigOptions) {
@@ -65,7 +83,7 @@ function getEnv(templateConfig: TemplateConfigOptions) {
 }
 
 function getIgnorePatterns({ lib, test, e2e }: TemplateConfigOptions) {
-  let ignorePatterns = ['/*.js', '**/dist/**']
+  let ignorePatterns = ['/*.js', '/*.json', '**/dist/**']
 
   if (test) {
     ignorePatterns = [...ignorePatterns, '**/test/**']
