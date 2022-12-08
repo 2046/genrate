@@ -132,11 +132,14 @@ function getViteBundleConfig(ts?: boolean) {
     files: [
       ['.env.production', tpl.etc.env],
       ['.env.development', tpl.etc.env],
+      ['src/vite-env.d.ts', tpl.etc.viteEnv],
       [ts ? 'vite.config.ts' : 'vite.config.js', tpl.bundler.vite]
     ],
+    dirs: ['src'],
     dependencies: { vue: '3.2.45' },
     devDependencies: {
       vite: '3.2.5',
+      sass: '1.56.1',
       '@vitejs/plugin-vue': '3.2.0',
       '@vitejs/plugin-vue-jsx': '2.1.1',
       'vue-tsc': ts ? '1.0.11' : undefined,

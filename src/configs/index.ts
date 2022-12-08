@@ -13,18 +13,20 @@ export async function parse(templateConfig: TemplateConfig, dest: string) {
   }
 
   if (preprepare) {
-    struct = {
-      ...struct,
-      ...(await preprepare(cloneDeep(struct), cloneDeep(config), dest))
+    const result = await preprepare(cloneDeep(struct), cloneDeep(config), dest)
+
+    if (result) {
+      struct = merge(struct, result)
     }
   }
 
   struct = parseConfig(struct, config, dest)
 
   if (postprepare) {
-    struct = {
-      ...struct,
-      ...(await postprepare(cloneDeep(struct), cloneDeep(config), dest))
+    const result = await postprepare(cloneDeep(struct), cloneDeep(config), dest)
+
+    if (result) {
+      struct = merge(struct, result)
     }
   }
 
