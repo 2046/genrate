@@ -2,25 +2,56 @@ import tpl from '../../templates'
 import { TemplateConfigOptions, ProjectStruct } from '../../../types'
 
 export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
-  let dependencies = {}
-  let devDependencies = {}
-  const { ts } = templateConfig
-  let files: Array<Array<string>> = []
   const bundlerType = getBundlerType(templateConfig)
 
   if (bundlerType === 'rollup') {
-    files = [
+    return getRollupBundleConfig(templateConfig.ts)
+  } else if (bundlerType === 'babel') {
+    return getBabelBundleConfig()
+  } else if (bundlerType === 'gulp') {
+    return getGulpBundleConfig(templateConfig.ts)
+  } else if (bundlerType === 'vite') {
+    return getViteBundleConfig(templateConfig.ts)
+  }
+
+  return {
+    files: [],
+    dependencies: {},
+    devDependencies: {}
+  }
+}
+
+export function getBundlerType({ framework, lib, ts }: TemplateConfigOptions) {
+  if (framework) {
+    switch (framework) {
+      case 'vanilla':
+        return lib ? 'rollup' : 'gulp'
+      case 'vue':
+        return 'vite'
+      case 'react':
+        return lib ? 'rollup' : 'webpack'
+      case 'electron':
+        return lib ? 'rollup' : 'electron-builder'
+      case 'nest':
+        return lib ? 'rollup' : 'nest'
+    }
+  } else {
+    return lib ? 'rollup' : ts ? 'tsc' : 'babel'
+  }
+}
+
+function getRollupBundleConfig(ts?: boolean) {
+  return {
+    files: [
       ['babel.config.json', tpl.bundler.babel],
       ['.browserslistrc', tpl.etc.browserslistrc],
       ['rollup.config.js', ts ? tpl.bundler.rollup.ts : tpl.bundler.rollup.js]
-    ]
-
-    dependencies = Object.assign({}, dependencies, {
+    ],
+    dependencies: {
       '@babel/runtime': '7.20.1',
       '@babel/runtime-corejs3': '7.20.1'
-    })
-
-    devDependencies = Object.assign({}, devDependencies, {
+    },
+    devDependencies: {
       rollup: '3.2.5',
       '@babel/core': '7.20.2',
       '@babel/preset-env': '7.20.2',
@@ -30,47 +61,46 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
       '@rollup/plugin-commonjs': '23.0.2',
       '@rollup/plugin-node-resolve': '15.0.1',
       'rollup-plugin-node-externals': '5.0.2',
-      '@babel/plugin-transform-runtime': '7.19.6'
-    })
-
-    if (ts) {
-      devDependencies = Object.assign({}, devDependencies, {
-        tslib: '2.4.1',
-        'rollup-plugin-typescript2': '0.34.1'
-      })
+      '@babel/plugin-transform-runtime': '7.19.6',
+      tslib: ts ? '2.4.1' : undefined,
+      'rollup-plugin-typescript2': ts ? '0.34.1' : undefined
     }
-  } else if (bundlerType === 'babel') {
-    files = [
+  }
+}
+
+function getBabelBundleConfig() {
+  return {
+    files: [
       ['babel.config.json', tpl.bundler.babel],
       ['.browserslistrc', tpl.etc.browserslistrc]
-    ]
-
-    dependencies = Object.assign({}, dependencies, {
+    ],
+    dependencies: {
       '@babel/runtime': '7.20.1',
       '@babel/runtime-corejs3': '7.20.1'
-    })
-
-    devDependencies = Object.assign({}, devDependencies, {
+    },
+    devDependencies: {
       '@babel/cli': '7.19.3',
       '@babel/core': '7.20.2',
       '@babel/preset-env': '7.20.2',
       '@babel/plugin-transform-runtime': '7.19.6'
-    })
-  } else if (bundlerType === 'gulp') {
-    files = [
+    }
+  }
+}
+
+function getGulpBundleConfig(ts?: boolean) {
+  return {
+    files: [
       ['.env.production', tpl.etc.env],
       ['.env.development', tpl.etc.env],
       ['babel.config.json', tpl.bundler.babel],
       ['.browserslistrc', tpl.etc.browserslistrc],
       ['gulpfile.js', ts ? tpl.bundler.gulp.ts : tpl.bundler.gulp.js]
-    ]
-
-    dependencies = Object.assign({}, dependencies, {
+    ],
+    dependencies: {
       '@babel/runtime': '7.20.1',
       '@babel/runtime-corejs3': '7.20.1'
-    })
-
-    devDependencies = Object.assign({}, devDependencies, {
+    },
+    devDependencies: {
       gulp: '4.0.2',
       sass: '1.56.1',
       dotenv: '16.0.3',
@@ -91,53 +121,22 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
       'gulp-clean-css': '4.3.0',
       '@babel/preset-env': '7.20.2',
       'gulp-rev-delete-original': '0.2.3',
-      '@babel/plugin-transform-runtime': '7.19.6'
-    })
-
-    if (ts) {
-      devDependencies = Object.assign({}, devDependencies, {
-        'gulp-typescript': '6.0.0-alpha.1'
-      })
+      '@babel/plugin-transform-runtime': '7.19.6',
+      'gulp-typescript': ts ? '6.0.0-alpha.1' : undefined
     }
-  } else if (bundlerType === 'vite') {
-    files = [[ts ? 'vite.config.ts' : 'vite.config.js', tpl.bundler.vite]]
+  }
+}
 
-    dependencies = Object.assign({}, dependencies, {
-      vue: '3.2.45',
-      'vue-router': '4.1.6'
-    })
-
-    devDependencies = Object.assign({}, devDependencies, {
+function getViteBundleConfig(ts?: boolean) {
+  return {
+    files: [[ts ? 'vite.config.ts' : 'vite.config.js', tpl.bundler.vite]],
+    dependencies: { vue: '3.2.45' },
+    devDependencies: {
       vite: '3.2.5',
       '@vitejs/plugin-vue': '3.2.0',
       '@vitejs/plugin-vue-jsx': '2.1.1',
       'vue-tsc': ts ? '1.0.11' : undefined,
       '@types/node': ts ? '18.11.11' : undefined
-    })
-  }
-
-  return {
-    files,
-    dependencies,
-    devDependencies
-  }
-}
-
-export function getBundlerType({ framework, lib, ts }: TemplateConfigOptions) {
-  if (framework) {
-    switch (framework) {
-      case 'vanilla':
-        return lib ? 'rollup' : 'gulp'
-      case 'vue':
-        return 'vite'
-      case 'react':
-        return lib ? 'rollup' : 'webpack'
-      case 'electron':
-        return lib ? 'rollup' : 'electron-builder'
-      case 'nest':
-        return lib ? 'rollup' : 'nest'
     }
-  } else {
-    return lib ? 'rollup' : ts ? 'tsc' : 'babel'
   }
 }

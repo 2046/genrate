@@ -73,8 +73,8 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: b
   } else if (bundlerType === 'vite') {
     return {
       dev: 'vite --host',
-      build: 'vite build',
-      preview: 'vite preview'
+      preview: 'vite preview',
+      build: ts ? 'vue-tsc --noEmit && vite build' : 'vite build'
     }
   } else {
     return {}
