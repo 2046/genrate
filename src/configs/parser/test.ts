@@ -11,7 +11,7 @@ export default function ({ ts, test, framework }: TemplateConfigOptions): Projec
   let devDependencies: JSONObject = {}
 
   if (framework === 'vue') {
-    files = [['vitest.config.js', tpl.test.vitest]]
+    files = [[`vitest.config.${ts ? 'ts' : 'js'}`, tpl.test.vitest(ts)]]
 
     devDependencies = {
       jsdom: '20.0.3',

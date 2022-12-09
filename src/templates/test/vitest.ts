@@ -1,8 +1,10 @@
-export default `import { mergeConfig } from 'vite'
+export default function (ts?: boolean) {
+  return `import { mergeConfig } from 'vite'
 import viteConfig from './vite.config'
 import { defineConfig } from 'vitest/config'
-
-export default mergeConfig(viteConfig(), defineConfig({
+${ts ? "import type { UserConfigFn } from 'vite'" : ''}
+  
+export default mergeConfig(${ts ? '(<UserConfigFn>viteConfig)' : 'viteConfig'}({ command: 'serve', mode: 'development' }), defineConfig({
   test: {
     environment: 'jsdom',
     transformMode: {
@@ -13,3 +15,4 @@ export default mergeConfig(viteConfig(), defineConfig({
     }
   }
 }))`
+}
