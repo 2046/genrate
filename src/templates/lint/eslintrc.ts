@@ -3,7 +3,7 @@ import { JSONObject } from 'types-json'
 import { TemplateConfigOptions } from '../../../types'
 
 export default function (templateConfig: TemplateConfigOptions) {
-  const { ts, framework, lint = [] } = templateConfig
+  const { ts, framework, lint = [], fvs } = templateConfig
   const config: JSONObject = {
     root: true,
     plugins: [],
@@ -57,16 +57,23 @@ export default function (templateConfig: TemplateConfigOptions) {
   }
 
   if (framework === 'vue') {
-    config.extends = ['plugin:vue/vue3-essential', ...(<Array<string>>config.extends)]
-    config.overrides = [
-      {
-        files: ts ? ['*.ts', '*.tsx', '*.vue'] : ['*.vue'],
-        rules: {
-          'no-unused-vars': 'off',
-          '@typescript-eslint/no-unused-vars': ts ? 'warn' : undefined
+    if (fvs === '3.x' || !fvs) {
+      config.extends = ['plugin:vue/vue3-essential', ...(<Array<string>>config.extends)]
+      config.overrides = [
+        {
+          files: ts ? ['*.ts', '*.tsx', '*.vue'] : ['*.vue'],
+          rules: {
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': ts ? 'warn' : undefined
+          }
         }
-      }
-    ]
+      ]
+    }
+
+    if (fvs === '2.x') {
+      config.extends = ['plugin:vue/essential', ...(<Array<string>>config.extends)]
+      config.parserOptions = { parser: '@babel/eslint-parser' }
+    }
   }
 
   return `module.exports = ${stringify(config)}`.replace(/('|")(?=require.*?\()|(?<=require.*?\(.+?\))("|')/g, '')

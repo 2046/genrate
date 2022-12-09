@@ -77,9 +77,19 @@ export default function (rule: string, templateConfig: TemplateConfigOptions): P
     }
 
     if (templateConfig.framework === 'vue') {
-      devDependencies = Object.assign({}, devDependencies, {
-        'eslint-plugin-vue': '9.8.0'
-      })
+      if (templateConfig.fvs === '3.x' || !templateConfig.fvs) {
+        devDependencies = Object.assign({}, devDependencies, {
+          'eslint-plugin-vue': '9.8.0'
+        })
+      }
+
+      if (templateConfig.fvs === '2.x') {
+        devDependencies = Object.assign({}, devDependencies, {
+          '@babel/eslint-parser': '7.19.1',
+          '@vue/cli-plugin-eslint': '5.0.8',
+          'eslint-plugin-vue': '8.7.1'
+        })
+      }
     }
 
     return {

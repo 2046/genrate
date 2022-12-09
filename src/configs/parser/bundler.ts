@@ -131,10 +131,11 @@ function getGulpBundleConfig(ts?: boolean) {
 
 function getViteBundleConfig({ ts, lib }: TemplateConfigOptions) {
   let files = lib
-    ? []
+    ? [['.browserslistrc', tpl.etc.browserslistrc]]
     : [
         ['.env.production', tpl.etc.env],
-        ['.env.development', tpl.etc.env]
+        ['.env.development', tpl.etc.env],
+        ['.browserslistrc', tpl.etc.browserslistrc]
       ]
 
   if (ts) {
@@ -165,7 +166,10 @@ function getViteBundleConfig({ ts, lib }: TemplateConfigOptions) {
 function getVueCliBundleConfig() {
   return {
     files: [
+      ['.env.production', tpl.etc.env],
+      ['.env.development', tpl.etc.env],
       ['vue.config.js', tpl.bundler.vueCli],
+      ['.browserslistrc', tpl.etc.browserslistrc],
       ['babel.config.json', tpl.bundler.babel('vueCli')]
     ],
     dirs: ['src', 'public'],
@@ -174,6 +178,8 @@ function getVueCliBundleConfig() {
       'core-js': '3.26.1'
     },
     devDependencies: {
+      sass: '1.56.2',
+      'sass-loader': '13.2.0',
       '@babel/core': '7.20.5',
       '@vue/cli-plugin-babel': '5.0.8',
       '@vue/cli-service': '5.0.8',

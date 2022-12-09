@@ -84,7 +84,7 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: b
   } else if (bundlerType === 'vueCli') {
     return {
       serve: 'npx vue-cli-service serve --mode development',
-      build: 'npx vue-cli-service serve build --mode production',
+      build: 'npx vue-cli-service build --mode production',
       inspect: 'npx vue-cli-service inspect --mode development'
     }
   } else {
