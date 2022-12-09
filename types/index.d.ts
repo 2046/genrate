@@ -15,6 +15,7 @@ export interface TemplateConfigOptions {
   dirs?: Array<string>
   files?: Array<Array<string>>
   framework?: 'vanilla' | 'vue' | 'react' | 'electron' | 'nest'
+  fvs?: string
   lint?: Array<'stylelint' | 'eslint' | 'commitlint'>
   vscode?: Array<string>
   test?: boolean

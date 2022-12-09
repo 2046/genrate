@@ -81,6 +81,12 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: b
           preview: 'vite preview --host',
           build: ts ? 'vue-tsc --noEmit && vite build' : 'vite build'
         }
+  } else if (bundlerType === 'vueCli') {
+    return {
+      serve: 'npx vue-cli-service serve --mode development',
+      build: 'npx vue-cli-service serve build --mode production',
+      inspect: 'npx vue-cli-service inspect --mode development'
+    }
   } else {
     return {}
   }

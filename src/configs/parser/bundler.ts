@@ -12,6 +12,8 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
     return getGulpBundleConfig(templateConfig.ts)
   } else if (bundlerType === 'vite') {
     return getViteBundleConfig(templateConfig)
+  } else if (bundlerType === 'vueCli') {
+    return getVueCliBundleConfig()
   }
 
   return {
@@ -21,13 +23,13 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   }
 }
 
-export function getBundlerType({ framework, lib, ts }: TemplateConfigOptions) {
+export function getBundlerType({ framework, lib, ts, fvs }: TemplateConfigOptions) {
   if (framework) {
     switch (framework) {
       case 'vanilla':
         return lib ? 'rollup' : 'gulp'
       case 'vue':
-        return 'vite'
+        return fvs === '3.x' ? 'vite' : fvs === '2.x' ? 'vueCli' : 'vite'
       case 'react':
         return lib ? 'rollup' : 'webpack'
       case 'electron':
@@ -43,7 +45,7 @@ export function getBundlerType({ framework, lib, ts }: TemplateConfigOptions) {
 function getRollupBundleConfig(ts?: boolean) {
   return {
     files: [
-      ['babel.config.json', tpl.bundler.babel],
+      ['babel.config.json', tpl.bundler.babel()],
       ['.browserslistrc', tpl.etc.browserslistrc],
       ['rollup.config.js', ts ? tpl.bundler.rollup.ts : tpl.bundler.rollup.js]
     ],
@@ -71,7 +73,7 @@ function getRollupBundleConfig(ts?: boolean) {
 function getBabelBundleConfig() {
   return {
     files: [
-      ['babel.config.json', tpl.bundler.babel],
+      ['babel.config.json', tpl.bundler.babel()],
       ['.browserslistrc', tpl.etc.browserslistrc]
     ],
     dependencies: {
@@ -92,7 +94,7 @@ function getGulpBundleConfig(ts?: boolean) {
     files: [
       ['.env.production', tpl.etc.env],
       ['.env.development', tpl.etc.env],
-      ['babel.config.json', tpl.bundler.babel],
+      ['babel.config.json', tpl.bundler.babel()],
       ['.browserslistrc', tpl.etc.browserslistrc],
       ['gulpfile.js', ts ? tpl.bundler.gulp.ts : tpl.bundler.gulp.js]
     ],
@@ -147,7 +149,7 @@ function getViteBundleConfig({ ts, lib }: TemplateConfigOptions) {
 
   return {
     files,
-    dirs: ['src'],
+    dirs: ['src', 'public'],
     dependencies: { vue: '3.2.45' },
     devDependencies: {
       vite: '3.2.5',
@@ -156,6 +158,26 @@ function getViteBundleConfig({ ts, lib }: TemplateConfigOptions) {
       '@vitejs/plugin-vue-jsx': '2.1.1',
       'vue-tsc': ts ? '1.0.11' : undefined,
       '@types/node': ts ? '18.11.11' : undefined
+    }
+  }
+}
+
+function getVueCliBundleConfig() {
+  return {
+    files: [
+      ['vue.config.js', tpl.bundler.vueCli],
+      ['babel.config.json', tpl.bundler.babel('vueCli')]
+    ],
+    dirs: ['src', 'public'],
+    dependencies: {
+      vue: '2.7.14',
+      'core-js': '3.26.1'
+    },
+    devDependencies: {
+      '@babel/core': '7.20.5',
+      '@vue/cli-plugin-babel': '5.0.8',
+      '@vue/cli-service': '5.0.8',
+      'vue-template-compiler': '2.7.14'
     }
   }
 }
