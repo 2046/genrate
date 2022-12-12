@@ -13,7 +13,7 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   } else if (bundlerType === 'vite') {
     return getViteBundleConfig(templateConfig)
   } else if (bundlerType === 'vueCli') {
-    return getVueCliBundleConfig()
+    return getVueCliBundleConfig(templateConfig.ts)
   }
 
   return {
@@ -163,19 +163,27 @@ function getViteBundleConfig({ ts, lib }: TemplateConfigOptions) {
   }
 }
 
-function getVueCliBundleConfig() {
+function getVueCliBundleConfig(ts?: boolean) {
+  let files = [
+    ['.env.production', tpl.etc.env],
+    ['.env.development', tpl.etc.env],
+    ['vue.config.js', tpl.bundler.vueCli],
+    ['.browserslistrc', tpl.etc.browserslistrc],
+    ['babel.config.json', tpl.bundler.babel('vueCli')]
+  ]
+
+  if (ts) {
+    files = [...files, ['src/shims-tsx.d.ts', tpl.etc.shimTsx], ['src/shims-vue.d.ts', tpl.etc.shimsVue]]
+  }
+
   return {
-    files: [
-      ['.env.production', tpl.etc.env],
-      ['.env.development', tpl.etc.env],
-      ['vue.config.js', tpl.bundler.vueCli],
-      ['.browserslistrc', tpl.etc.browserslistrc],
-      ['babel.config.json', tpl.bundler.babel('vueCli')]
-    ],
+    files,
     dirs: ['src', 'public'],
     dependencies: {
       vue: '2.7.14',
-      'core-js': '3.26.1'
+      'core-js': '3.26.1',
+      'vue-class-component': ts ? '7.2.6' : undefined,
+      'vue-property-decorator': ts ? '9.1.2' : undefined
     },
     devDependencies: {
       sass: '1.56.2',
@@ -183,7 +191,8 @@ function getVueCliBundleConfig() {
       '@babel/core': '7.20.5',
       '@vue/cli-plugin-babel': '5.0.8',
       '@vue/cli-service': '5.0.8',
-      'vue-template-compiler': '2.7.14'
+      'vue-template-compiler': '2.7.14',
+      '@vue/cli-plugin-typescript': ts ? '5.0.8' : undefined
     }
   }
 }

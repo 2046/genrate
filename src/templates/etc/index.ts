@@ -1,3 +1,5 @@
 export { default as env } from './env'
 export { default as viteEnv } from './vite-env'
+export { default as shimTsx } from './shims-tsx'
+export { default as shimsVue } from './shims-vue'
 export { default as browserslistrc } from './browserslistrc'

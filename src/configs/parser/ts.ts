@@ -2,7 +2,7 @@ import tpl from '../../templates'
 import { stringify } from '../../utils'
 import { ProjectStruct, TemplateConfigOptions } from '../../../types'
 
-export default function ({ ts, lib, framework }: TemplateConfigOptions): ProjectStruct {
+export default function ({ ts, lib, framework, fvs }: TemplateConfigOptions): ProjectStruct {
   let files = [['tsconfig.json', tpl.ts.node]]
 
   if (!ts) {
@@ -17,7 +17,7 @@ export default function ({ ts, lib, framework }: TemplateConfigOptions): Project
     files = [['tsconfig.json', tpl.ts.web]]
 
     if (['vue'].includes(framework)) {
-      files = [['tsconfig.json', tpl.ts.vue]]
+      files = [['tsconfig.json', tpl.ts.vue(fvs)]]
     }
 
     if (['nest'].includes(framework)) {

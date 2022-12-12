@@ -57,7 +57,22 @@ export default function (templateConfig: TemplateConfigOptions) {
   }
 
   if (framework === 'vue') {
-    if (fvs === '3.x' || !fvs) {
+    if (fvs === '2.x') {
+      config.extends = ['plugin:vue/essential', ...(<Array<string>>config.extends)]
+      config.overrides = [
+        {
+          files: ts ? ['*.ts', '*.tsx', '*.vue'] : ['*.vue'],
+          rules: {
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': ts ? 'warn' : undefined
+          }
+        }
+      ]
+
+      if (!ts) {
+        config.parserOptions = { parser: '@babel/eslint-parser' }
+      }
+    } else {
       config.extends = ['plugin:vue/vue3-essential', ...(<Array<string>>config.extends)]
       config.overrides = [
         {
@@ -68,11 +83,6 @@ export default function (templateConfig: TemplateConfigOptions) {
           }
         }
       ]
-    }
-
-    if (fvs === '2.x') {
-      config.extends = ['plugin:vue/essential', ...(<Array<string>>config.extends)]
-      config.parserOptions = { parser: '@babel/eslint-parser' }
     }
   }
 
