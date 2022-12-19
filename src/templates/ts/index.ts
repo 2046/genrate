@@ -47,20 +47,25 @@ export default {
   lib: {
     node: stringify(merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types' } })),
     web: stringify(merge({}, defaultOptions, { compilerOptions: { declaration: true, declarationDir: 'types', lib: ['ESNext', 'DOM'] } })),
-    vue: stringify(
-      merge({}, defaultOptions, {
-        include: ['src/**/*', 'env.d.ts', 'src/**/*.vue', 'vite.config.ts', 'test/**/*'],
-        compilerOptions: {
-          jsx: 'preserve',
-          isolatedModules: true,
-          preserveValueImports: true,
-          importsNotUsedAsValues: 'error',
-          lib: ['ES2016', 'DOM', 'DOM.Iterable'],
-          baseUrl: '.',
-          types: ['node'],
-          paths: { '@/*': ['./src/*'] }
-        }
-      })
-    )
+    vue: (fvs?: string) =>
+      stringify(
+        merge({}, defaultOptions, {
+          include:
+            fvs === '2.x'
+              ? ['src/**/*', 'src/**/*.vue', 'test/**/*']
+              : ['src/**/*', 'env.d.ts', 'src/**/*.vue', 'vite.config.ts', 'test/**/*'],
+          compilerOptions: {
+            jsx: 'preserve',
+            isolatedModules: fvs === '2.x' ? undefined : true,
+            experimentalDecorators: fvs === '2.x' ? true : undefined,
+            preserveValueImports: true,
+            importsNotUsedAsValues: 'error',
+            lib: ['ES2016', 'DOM', 'DOM.Iterable'],
+            baseUrl: '.',
+            types: ['node'],
+            paths: { '@/*': ['./src/*'] }
+          }
+        })
+      )
   }
 }

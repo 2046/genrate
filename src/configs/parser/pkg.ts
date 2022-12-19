@@ -49,6 +49,12 @@ function getExports(bundlerType: string, lib?: boolean, ts?: boolean) {
       }
     }
   }
+
+  if (['vueCli'].includes(bundlerType)) {
+    return {
+      main: './dist/index.common.js'
+    }
+  }
 }
 
 function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: boolean, lib?: boolean) {
@@ -82,11 +88,17 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: b
           build: ts ? 'vue-tsc --noEmit && vite build' : 'vite build'
         }
   } else if (bundlerType === 'vueCli') {
-    return {
-      serve: 'npx vue-cli-service serve --mode development',
-      build: 'npx vue-cli-service build --mode production',
-      inspect: 'npx vue-cli-service inspect --mode development'
-    }
+    return lib
+      ? {
+          build: ts
+            ? 'npx vue-cli-service build --target lib --name index src/index.ts'
+            : 'npx vue-cli-service build --target lib --name index src/index.js'
+        }
+      : {
+          serve: 'npx vue-cli-service serve --mode development',
+          build: 'npx vue-cli-service build --mode production',
+          inspect: 'npx vue-cli-service inspect --mode development'
+        }
   } else {
     return {}
   }

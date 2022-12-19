@@ -13,7 +13,7 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
   } else if (bundlerType === 'vite') {
     return getViteBundleConfig(templateConfig)
   } else if (bundlerType === 'vueCli') {
-    return getVueCliBundleConfig(templateConfig.ts)
+    return getVueCliBundleConfig(templateConfig)
   }
 
   return {
@@ -163,14 +163,20 @@ function getViteBundleConfig({ ts, lib }: TemplateConfigOptions) {
   }
 }
 
-function getVueCliBundleConfig(ts?: boolean) {
-  let files = [
-    ['.env.production', tpl.etc.env],
-    ['.env.development', tpl.etc.env],
-    ['vue.config.js', tpl.bundler.vueCli],
-    ['.browserslistrc', tpl.etc.browserslistrc],
-    ['babel.config.json', tpl.bundler.babel('vueCli')]
-  ]
+function getVueCliBundleConfig({ ts, lib }: TemplateConfigOptions) {
+  let files = lib
+    ? [
+        ['vue.config.js', tpl.bundler.vueCli],
+        ['.browserslistrc', tpl.etc.browserslistrc],
+        ['babel.config.json', tpl.bundler.babel('vueCli')]
+      ]
+    : [
+        ['.env.production', tpl.etc.env],
+        ['.env.development', tpl.etc.env],
+        ['vue.config.js', tpl.bundler.vueCli],
+        ['.browserslistrc', tpl.etc.browserslistrc],
+        ['babel.config.json', tpl.bundler.babel('vueCli')]
+      ]
 
   if (ts) {
     files = [...files, ['src/shims-tsx.d.ts', tpl.etc.shimTsx], ['src/shims-vue.d.ts', tpl.etc.shimsVue]]

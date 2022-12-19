@@ -29,10 +29,13 @@ export default function ({ ts, lib, framework, fvs }: TemplateConfigOptions): Pr
     files = [['tsconfig.json', tpl.ts.lib.web]]
 
     if (['vue'].includes(framework)) {
-      files = [
-        ['tsconfig.json', tpl.ts.lib.vue],
-        ['tsconfig.types.json', stringify({ include: ['src/**/*'] })]
-      ]
+      files =
+        fvs === '2.x'
+          ? [['tsconfig.json', tpl.ts.lib.vue(fvs)]]
+          : [
+              ['tsconfig.json', tpl.ts.lib.vue(fvs)],
+              ['tsconfig.types.json', stringify({ include: ['src/**/*'] })]
+            ]
     }
 
     if (['nest'].includes(framework)) {
