@@ -111,6 +111,11 @@ function getTestCommands(bundlerType: ReturnType<typeof getBundlerType>, test?: 
       e2e: test && e2e ? 'npx cypress open' : undefined,
       'test:coverage': test ? 'vitest run --coverage' : undefined
     }
+  } else if (bundlerType === 'vueCli') {
+    return {
+      test: test ? 'npx vue-cli-service test:unit' : undefined,
+      e2e: test && e2e ? 'npx cypress open' : undefined
+    }
   } else {
     return {
       test: test ? 'npx jest' : undefined,
