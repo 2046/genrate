@@ -38,7 +38,7 @@ The supported project type are:
 | ------------ | -------------------------------------------------------- |
 | Node         | [@tmplates/node](https://github.com/tmplates/node)       |
 | Vanilla      | [@tmplates/vanilla](https://github.com/tmplates/vanilla) |
-| Vue          | @tmplates/vue                                            |
+| Vue          | [@tmplates/vue](https://github.com/tmplates/vue)         |
 | React        | @tmplates/react                                          |
 | Electron     | @tmplates/electron                                       |
 | Nest         | @tmplates/nest                                           |
@@ -84,9 +84,10 @@ For more examples, you can refer to [Project Templates](#project-templates).
 {
   ts?: boolean // Whether to use ts language
   lib?: boolean // Whether to create a library project
-  dirs?: Array<string> // create some folders, etc: ['src', 'tests', 'plugins']
-  files?: Array<Array<string>> // create some files, etc: [['src/index.ts', ''], ['test/index.spce.js', '']]
+  dirs?: Array<string> // Create some folders, etc: ['src', 'tests', 'plugins']
+  files?: Array<Array<string>> // Create some files, etc: [['src/index.ts', ''], ['test/index.spce.js', '']]
   framework?: 'vanilla' | 'vue' | 'react' | 'electron' | 'nest' // Use a web framework, vanilla indicates that no framework is used
+  fvs?: string // Select the framework version, you need to use with the framework field, currently supports Vue 2.x/3.x version
   lint?: Array<'stylelint' | 'eslint' | 'commitlint'> // Use lint tools, support stylelint, eslint and commitlint, Where stylelint used to unify code styles
   vscode?: Array<string> // Recommended of VScode plugins, need to fill in plugin ID, etc: ['vue.volar', 'mikestead.dotenv']
   test?: boolean // Whether to use unit tests
