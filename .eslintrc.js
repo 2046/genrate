@@ -23,7 +23,8 @@ module.exports = {
       }
     ],
     "@typescript-eslint/ban-ts-comment": "off",
-    "no-case-declarations": "off"
+    "no-case-declarations": "off",
+    "no-useless-escape": "off"
   },
   "env": {
     "node": true

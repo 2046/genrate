@@ -19,7 +19,11 @@ export function isDirectory(path: string) {
 }
 
 export function rmDirSync(path: string) {
-  rimraf.sync(path)
+  const files = fs.readdirSync(path)
+
+  for (const file of files.filter((file) => !isdotfile(file))) {
+    rimraf.sync(join(path, file))
+  }
 }
 
 export async function readdir(path: string) {
@@ -73,4 +77,8 @@ export function createProject(struct: Required<ProjectStruct>, dest: string, vcs
   if (vcs) {
     exec('git init', { cwd: dest })
   }
+}
+
+function isdotfile(fileName: string) {
+  return /(?:^|[\\\/])(\.(?!\.)[^\\\/]+)$/.test(fileName)
 }
