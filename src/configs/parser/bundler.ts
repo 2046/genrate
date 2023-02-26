@@ -14,6 +14,8 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
     return getViteBundleConfig(templateConfig)
   } else if (bundlerType === 'vueCli') {
     return getVueCliBundleConfig(templateConfig)
+  } else if (bundlerType === 'viteReact') {
+    return getViteReactBundlerConfig(templateConfig)
   }
 
   return {
@@ -31,7 +33,7 @@ export function getBundlerType({ framework, lib, ts, fvs }: TemplateConfigOption
       case 'vue':
         return fvs === '3.x' ? 'vite' : fvs === '2.x' ? 'vueCli' : 'vite'
       case 'react':
-        return lib ? 'rollup' : 'webpack'
+        return 'viteReact'
       case 'electron':
         return lib ? 'rollup' : 'electron-builder'
       case 'nest':
@@ -199,6 +201,43 @@ function getVueCliBundleConfig({ ts, lib }: TemplateConfigOptions) {
       '@vue/cli-service': '5.0.8',
       'vue-template-compiler': '2.7.14',
       '@vue/cli-plugin-typescript': ts ? '5.0.8' : undefined
+    }
+  }
+}
+
+function getViteReactBundlerConfig({ lib, ts }: TemplateConfigOptions) {
+  let files = lib
+    ? [['.browserslistrc', tpl.etc.browserslistrc]]
+    : [
+        ['.env.production', tpl.etc.env],
+        ['.env.development', tpl.etc.env],
+        ['.browserslistrc', tpl.etc.browserslistrc]
+      ]
+
+  if (ts) {
+    files = [...files, ['vite.config.ts', lib ? tpl.bundler.viteReact.lib(true) : tpl.bundler.viteReact.app()]]
+
+    files = lib
+      ? [...files, ['env.d.ts', tpl.etc.viteEnv({ component: false })]]
+      : [...files, ['env.d.ts', tpl.etc.viteEnv({ component: false, metaEnv: true })]]
+  } else {
+    files = [...files, ['vite.config.js', lib ? tpl.bundler.viteReact.lib(false) : tpl.bundler.viteReact.app()]]
+  }
+
+  return {
+    files,
+    dirs: ['src', 'public'],
+    dependencies: {
+      react: '^18.2.0',
+      'react-dom': '^18.2.0'
+    },
+    devDependencies: {
+      '@types/react': '^18.0.27',
+      '@types/react-dom': '^18.0.10',
+      '@vitejs/plugin-react-swc': '^3.0.0',
+      typescript: ts ? '^4.9.3' : undefined,
+      '@types/node': ts ? '18.11.11' : undefined,
+      vite: '^4.1.0'
     }
   }
 }
