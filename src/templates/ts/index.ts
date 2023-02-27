@@ -1,7 +1,7 @@
 import { merge } from 'lodash'
-import { stringify } from '../../utils'
 import { TSConfigJSON } from 'types-tsconfig'
 import { RequiredByKeys } from '../../../types'
+import { stringify } from '../../utils'
 
 const defaultOptions: RequiredByKeys<TSConfigJSON, 'compilerOptions' | 'include'> = {
   compilerOptions: {
@@ -19,6 +19,27 @@ const defaultOptions: RequiredByKeys<TSConfigJSON, 'compilerOptions' | 'include'
     forceConsistentCasingInFileNames: true
   },
   include: ['src/**/*.ts']
+}
+
+const reactOptions = {
+  compilerOptions: {
+    target: 'ESNext',
+    useDefineForClassFields: true,
+    lib: ['DOM', 'DOM.Iterable', 'ESNext'],
+    allowJs: false,
+    skipLibCheck: true,
+    esModuleInterop: false,
+    allowSyntheticDefaultImports: true,
+    strict: true,
+    forceConsistentCasingInFileNames: true,
+    module: 'ESNext',
+    moduleResolution: 'Node',
+    resolveJsonModule: true,
+    isolatedModules: true,
+    noEmit: true,
+    jsx: 'react-jsx'
+  },
+  include: ['src/**/*', 'env.d.ts', 'src/**/*.vue', 'vite.config.ts', 'test/**/*']
 }
 
 export default {
@@ -66,6 +87,8 @@ export default {
             paths: { '@/*': ['./src/*'] }
           }
         })
-      )
-  }
+      ),
+    react: stringify(reactOptions)
+  },
+  react: stringify(reactOptions)
 }

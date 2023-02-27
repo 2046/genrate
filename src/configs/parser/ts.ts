@@ -20,6 +20,10 @@ export default function ({ ts, lib, framework, fvs }: TemplateConfigOptions): Pr
       files = [['tsconfig.json', tpl.ts.vue(fvs)]]
     }
 
+    if (['react'].includes(framework)) {
+      files = [['tsconfig.json', tpl.ts.react]]
+    }
+
     if (['nest'].includes(framework)) {
       files = [['tsconfig.json', tpl.ts.node]]
     }
@@ -36,6 +40,10 @@ export default function ({ ts, lib, framework, fvs }: TemplateConfigOptions): Pr
               ['tsconfig.json', tpl.ts.lib.vue(fvs)],
               ['tsconfig.types.json', stringify({ include: ['src/**/*'] })]
             ]
+    }
+
+    if (['react'].includes(framework)) {
+      files = [['tsconfig.json', tpl.ts.lib.react]]
     }
 
     if (['nest'].includes(framework)) {

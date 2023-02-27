@@ -37,7 +37,7 @@ function getExports(bundlerType: string, lib?: boolean, ts?: boolean) {
     return {}
   }
 
-  if (['rollup', 'vite'].includes(bundlerType)) {
+  if (['rollup', 'vite', 'viteReact'].includes(bundlerType)) {
     return {
       main: './dist/index.cjs.js',
       types: ts ? './types/index.d.ts' : undefined,
@@ -75,7 +75,7 @@ function getBuildCommands(bundlerType: ReturnType<typeof getBundlerType>, ts?: b
       dev: 'cross-env NODE_ENV=development npx gulp dev',
       build: 'cross-env NODE_ENV=production npx gulp build'
     }
-  } else if (bundlerType === 'vite') {
+  } else if (bundlerType === 'vite' || bundlerType === 'viteReact') {
     return lib
       ? {
           dev: 'vite --host',
@@ -115,6 +115,13 @@ function getTestCommands(bundlerType: ReturnType<typeof getBundlerType>, test?: 
     return {
       test: test ? 'npx vue-cli-service test:unit' : undefined,
       e2e: test && e2e ? 'npx cypress open' : undefined
+    }
+  } else if (bundlerType === 'viteReact') {
+    return {
+      test: test ? 'vitest' : undefined,
+      e2e: test && e2e ? 'npx cypress open' : undefined,
+      'test:coverage': test ? 'vitest run --coverage' : undefined,
+      'test:ui': test ? 'vitest --ui' : undefined
     }
   } else {
     return {

@@ -36,6 +36,17 @@ export default function (templateConfig: TemplateConfigOptions): ProjectStruct {
         '@vitest/coverage-c8': '0.25.6'
       }
     }
+  } else if (framework === 'react') {
+    files = [[`vitest.config.${ts ? 'ts' : 'js'}`, tpl.test.vitest(ts)]]
+
+    devDependencies = {
+      '@types/react-test-renderer': '18',
+      '@vitejs/plugin-react': 'latest',
+      '@vitest/ui': 'latest',
+      'happy-dom': 'latest',
+      jsdom: 'latest',
+      'react-test-renderer': '18'
+    }
   } else {
     files = [['jest.config.json', tpl.test.jest(templateConfig)]]
 
